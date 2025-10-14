@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Detail</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        a { text-decoration: none; color: #2a7; }
+    </style>
+</head>
+<body>
+<h1 th:text="'Order #' + ${order.id}"></h1>
+<p><strong>Date:</strong>
+    <span th:text="${#temporals.format(order.date.toInstant(), 'yyyy-MM-dd')}"></span>
+</p>
+<p><strong>Customer:</strong>
+    <span th:text="${order.customer.name}"></span>
+</p>
+
+<h2>Order Lines</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Product</th>
+        <th>Amount</th>
+        <th>Purchase Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="line : ${order.orderLines}">
+        <td th:text="${line.product.name}"></td>
+        <td th:text="${line.amount}"></td>
+        <td th:text="${line.purchasePrice} + ' USD'"></td>
+    </tr>
+    </tbody>
+</table>
+
+<br/>
+<a th:href="@{/order}">← Back to Orders</a>
+
+</body>
+</html>

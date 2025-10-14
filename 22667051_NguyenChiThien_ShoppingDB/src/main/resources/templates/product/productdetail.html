@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết sản phẩm</title>
+    <style>
+        .comments {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+        .comment {
+            border-left: 3px solid #2a7;
+            margin-bottom: 8px;
+            padding-left: 10px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+<h1>Product Detail</h1>
+
+<p th:text="'Name: ' + ${product.name}"></p>
+<p th:text="'Price: ' + ${product.price} + ' USD'"></p>
+
+<div class="comments">
+    <h3>Comments:</h3>
+    <div th:if="${#lists.isEmpty(product.comments)}">
+        <p><em>No comments yet</em></p>
+    </div>
+    <div th:each="c : ${product.comments}" class="comment">
+        <span th:text="${c.text}">Comment Content</span>
+    </div>
+</div>
+
+</body>
+</html>

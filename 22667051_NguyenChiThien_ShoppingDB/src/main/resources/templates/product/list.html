@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            color: #2a7;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .actions {
+            text-align: right;
+            margin-bottom: 15px;
+        }
+
+        .actions a {
+            text-decoration: none;
+            background: #2a7;
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 6px;
+        }
+
+        .product {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            transition: 0.2s;
+        }
+
+        .product:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .product h2 {
+            margin: 0;
+            color: #2a7;
+        }
+
+        .product p {
+            margin: 5px 0;
+        }
+
+        .buttons {
+            margin-top: 10px;
+        }
+
+        .buttons a {
+            text-decoration: none;
+            background-color: #2a7;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin-right: 8px;
+        }
+
+        .buttons a.delete {
+            background-color: #e74c3c;
+        }
+
+        .buttons a.edit {
+            background-color: #f39c12;
+        }
+
+        .comments {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+
+        .comment {
+            border-left: 3px solid #2a7;
+            margin-bottom: 8px;
+            padding-left: 10px;
+            font-style: italic;
+        }
+
+        em {
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>List of Products</h1>
+
+    <div class="actions">
+        <a th:href="@{/product/add}">+ Add New Product</a>
+    </div>
+
+    <div th:if="${#lists.isEmpty(products)}">
+        <p><em>No products available.</em></p>
+    </div>
+
+    <div th:each="product : ${products}" class="product">
+        <h2 th:text="${product.name}">Product Name</h2>
+        <p><strong>Price:</strong> <span th:text="${product.price}">0</span> USD</p>
+
+        <div class="comments">
+            <h3>Comments:</h3>
+            <div th:if="${#lists.isEmpty(product.comments)}">
+                <p><em>No comments yet.</em></p>
+            </div>
+            <div th:each="c : ${product.comments}" class="comment">
+                <span th:text="${c.text}">Comment Content</span>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <a th:href="@{'/product/' + ${product.id}}">View</a>
+            <a class="edit" th:href="@{'/product/edit/' + ${product.id}}">Edit</a>
+            <a class="delete" th:href="@{'/product/delete/' + ${product.id}}"
+               onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

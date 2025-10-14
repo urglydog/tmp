@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 60px auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        img {
+            width: 100px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #2a7;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #333;
+        }
+
+        ol {
+            list-style: none;
+            padding: 0;
+            margin-top: 25px;
+        }
+
+        li {
+            margin: 15px 0;
+        }
+
+        a {
+            display: inline-block;
+            background-color: #2a7;
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        a:hover {
+            background-color: #1e5d54;
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <img src="../../images/shopping.png" th:src="@{/images/shopping.png}" alt="Logo"/>
+
+    <h1 th:text="${message}">Welcome Thymeleaf</h1>
+    <p th:text="${date}">2025-10-13</p>
+
+    <p>Please select an option:</p>
+
+    <ol>
+        <li><a th:href="@{/product}">🛒 Product List</a></li>
+        <li><a th:href="@{/order}">📦 Order List</a></li>
+        <li><a th:href="@{/customer}">👤 Customer List</a></li>
+    </ol>
+
+    <footer>
+        © 2025 Spring Boot Shopping App
+    </footer>
+</div>
+</body>
+</html>
