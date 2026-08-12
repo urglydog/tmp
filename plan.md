@@ -1,4 +1,5 @@
 # TÀI LIỆU MÔ TẢ HỆ THỐNG & KẾ HOẠCH TRIỂN KHAI (PRD & ARCHITECTURE)
+
 **Tên dự án:** Smart Spender (Voice & AI-Powered Multi-Wallet Expense Tracker)  
 **Mục tiêu:** Quản lý chi tiêu đa nguồn tiền (Ngân hàng, MoMo, SPayLater, Ví trả sau...) bằng giọng nói/văn bản ngắn thông qua AI bóc tách tự động.
 
@@ -26,14 +27,17 @@
 
 ## 2. KIẾN TRÚC & TECH STACK (TECH STACK ARCHITECTURE)
 
+```text
 [ Mobile App: Flutter (Dart) ]
 │
 ├── (1) Direct CRUD & Auth via Supabase Client SDK
 │        └──► [ Supabase Auth & Postgres DB ]
 │
 └── (2) Audio/Text Input via REST API
-└──► [ Supabase Edge Function (Deno/TypeScript) ]
-└──► [ Gemini 1.5 Flash API (Structured JSON) ]
+         └──► [ Supabase Edge Function (Deno/TypeScript) ]
+                   └──► [ Gemini 1.5 Flash API (Structured JSON) ]
+```
+
 ### Front-End (Mobile App)
 * **Framework:** Flutter (Dart) - cross-platform, UI mượt.
 * **State Management:** `flutter_bloc` hoặc `provider`.
@@ -60,62 +64,63 @@
 
 ---
 
-## 4. KẾ HOẠCH TRIỂN KHAI PHÂN RÃ TASK (MASTER TASK BREAKDOWN)
+## 4. LỘ TRÌNH TRIỂN KHAI CHI TIẾT & YÊU CẦU TÀI NGUYÊN
 
-### EPIC 1: Hạ tầng Backend & Cơ sở dữ liệu (Supabase Setup)
-* **TASK 1.1: Thiết lập dự án Supabase**
-  * [ ] Tạo Project mới trên Supabase Cloud Dashboard.
-  * [ ] Lấy API Keys (`SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`).
-  * [ ] Thiết lập Supabase CLI dưới máy local (`supabase init`, `supabase login`).
-* **TASK 1.2: Khởi tạo Cơ sở dữ liệu (Database Migration)**
-  * [ ] Viết script DDL SQL tạo các bảng `profiles`, `wallets`, `categories`, `transactions`.
-  * [ ] Cấu hình Foreign Keys và Indexes cho các cột `user_id`, `created_at`.
-  * [ ] Viết Trigger tự động chèn dữ liệu vào `profiles` khi có user mới đăng ký.
-* **TASK 1.3: Cấu hình Bảo mật RLS (Row Level Security)**
-  * [ ] Bật RLS cho tất cả các bảng.
-  * [ ] Tạo Policy cho phép user chỉ `SELECT`, `INSERT`, `UPDATE`, `DELETE` trên dòng dữ liệu thuộc về `auth.uid()`.
-* **TASK 1.4: Xây dựng Supabase Edge Function cho AI Parsing**
-  * [ ] Khởi tạo Edge Function `supabase functions new parse-expense`.
-  * [ ] Tích hợp Gemini API SDK / Fetch HTTP call.
-  * [ ] Soạn thảo System Prompt ép Gemini trả về JSON Schema (`amount`, `category_name`, `wallet_name`, `note`).
-  * [ ] Deploy Edge Function lên Supabase Cloud (`supabase functions deploy parse-expense`).
+Chiến lược phát triển sẽ đi từ Backend (để thiết lập cấu trúc dữ liệu và API thật) đến Frontend (UI/UX) và cuối cùng là tích hợp AI, tối ưu và phát hành.
 
----
+### GIAI ĐOẠN 1: Xây dựng nền tảng Backend & AI Gateway (Dự kiến: 1-2 tuần)
+**Mục tiêu:** Đảm bảo database sẵn sàng, các luồng xác thực (Auth) hoạt động và API phân tích AI nhận/trả kết quả chuẩn JSON.
 
-### EPIC 2: Phát triển Ứng dụng Mobile (Flutter Frontend)
-* **TASK 2.1: Khởi tạo & Cấu hình Dự án Flutter**
-  * [ ] Tạo Flutter project (`flutter create smart_spender`).
-  * [ ] Cấu hình file `pubspec.yaml` cài các thư viện (`supabase_flutter`, `speech_to_text`, `fl_chart`, `provider`).
-  * [ ] Khởi tạo `Supabase.initialize()` trong `main.dart`.
-* **TASK 2.2: Luồng Xác thực Người dùng (Authentication Flow)**
-  * [ ] Xây dựng Màn hình Đăng nhập / Đăng ký (Email/Password).
-  * [ ] Xử lý lưu Session và Auto-login khi mở ứng dụng.
-* **TASK 2.3: Màn hình Quản lý Ví & Danh mục (Wallets & Categories UI)**
-  * [ ] Xây dựng Form tạo/sửa Ví (Chọn loại ví: MBBank, MoMo, SPayLater...).
-  * [ ] Xây dựng danh mục Thu/Chi mặc định.
-* **TASK 2.4: Màn hình Nhập liệu AI (Core Voice/Text Input UI)**
-  * [ ] Cấu hình Microphone permission cho iOS/Android.
-  * [ ] Bắt sự kiện Giọng nói -> Chuyển thành văn bản thực thời gian (Speech-to-Text).
-  * [ ] Gửi chuỗi văn bản tới Supabase Edge Function `parse-expense`.
-  * [ ] Thiết kế Bottom Sheet Confirmation: Hiển thị kết quả AI parse được, cho phép user chỉnh sửa dropdown/số tiền trước khi bấm "Lưu".
-* **TASK 2.5: Màn hình Trang chủ & Báo cáo (Dashboard & Analytics UI)**
-  * [ ] Thiết kế Card xem tổng số dư khả dụng và danh sách các Thẻ ví (Horizontal List).
-  * [ ] Lấy danh sách giao dịch gần đây (Recent Transactions List).
-  * [ ] Tích hợp `fl_chart` vẽ biểu đồ tròn chi tiêu theo danh mục trong tháng.
+* **Công việc cụ thể:**
+  * [ ] Tạo project mới trên Supabase Cloud Dashboard, lấy API Keys.
+  * [ ] Chạy DDL SQL tạo các bảng `profiles`, `wallets`, `categories`, `transactions` và thiết lập Foreign Keys.
+  * [ ] Viết Database Triggers (VD: Tự động chèn dữ liệu vào bảng `profiles` khi có user đăng ký mới).
+  * [ ] Cấu hình bảo mật RLS (Row Level Security) cho các bảng, đảm bảo dữ liệu user nào user nấy xem.
+  * [ ] Tạo tài khoản Google AI Studio, lấy API Key Gemini 1.5 Flash.
+  * [ ] Viết và deploy Supabase Edge Function (`parse-expense`) kết nối Gemini để xử lý văn bản đầu vào.
+* **Yêu cầu tài nguyên:**
+  * **Tài khoản Supabase:** Miễn phí (Gói Free Tier). Đăng ký bằng Github/Email.
+  * **Tài khoản Google AI Studio:** Miễn phí (Để lấy API Key).
+  * **Môi trường Local:** Cài Node.js/Deno, Supabase CLI, Docker (nếu cần test Edge Function local).
+  * **Thẻ Visa/Mastercard:** Không yêu cầu.
 
----
+### GIAI ĐOẠN 2: Khởi tạo Project Flutter & UI Cơ bản (Dự kiến: 2 tuần)
+**Mục tiêu:** App chạy được trên máy ảo, thực hiện được luồng đăng nhập và quản lý (thêm/sửa/xoá) Ví và Danh mục.
 
-### EPIC 3: Đóng gói, Release & Vận hành (Production Deployment)
-* **TASK 3.1: Kiểm thử Luồng dữ liệu (End-to-End Testing)**
-  * [ ] Test case các câu thoại phức tạp (ví dụ: *"Vừa ăn cơm 30k bằng MoMo và mua trà sữa 45k bằng MBBank"*).
-  * [ ] Kiểm tra tính chính xác của việc trừ/cộng tiền số dư Ví.
-* **TASK 3.2: Đóng gói & Phát hành trên Google Play Store (Android)**
-  * [ ] Cấu hình App Icon, Splash Screen và Package Name (`com.thiennguyen.smart_spender`).
-  * [ ] Tạo Signing Key (`upload-keystore.jks`) và cấu hình `key.properties`.
-  * [ ] Tạo trang Web Privacy Policy đơn giản.
-  * [ ] Build file `.aab` (`flutter build appbundle --release`).
-  * [ ] Tạo app trên Google Play Console, cài đặt Closed Testing và gửi duyệt Production.
-* **TASK 3.3: Đóng gói & Phát hành trên Apple App Store (iOS)** *(Optional - Cần máy Mac)*
-  * [ ] Cấu hình App ID, Bundle Identifier và Provisioning Profiles trên Apple Developer Account.
-  * [ ] Mở thư mục `ios` bằng Xcode, tạo Archive và upload lên TestFlight.
-  * [ ] Điền Store Listing và Submit cho Apple Review.
+* **Công việc cụ thể:**
+  * [ ] Tạo Flutter project (`flutter create smart_spender`), cài đặt thư viện (`supabase_flutter`, `provider`, `google_fonts`...).
+  * [ ] Tích hợp `Supabase.initialize()` vào `main.dart`.
+  * [ ] Code màn hình Đăng ký / Đăng nhập (Auth UI) và xử lý luồng Auto-login.
+  * [ ] Code màn hình Quản lý Danh mục (Thêm, sửa, xoá danh mục Thu/Chi).
+  * [ ] Code màn hình Quản lý Ví (Form tạo/sửa Ví: chọn loại ví MBBank, MoMo, SPayLater... và nhập số dư ban đầu).
+* **Yêu cầu tài nguyên:**
+  * **Môi trường Local:** Cài đặt Flutter SDK, Android Studio hoặc VS Code.
+  * **Máy ảo (Emulator/Simulator):** Android Emulator hoặc iOS Simulator để test giao diện.
+  * **Tài khoản test:** 1-2 email ảo dùng để test tính năng Auth.
+
+### GIAI ĐOẠN 3: Tích hợp AI (Core Feature) & Giao diện Nhập liệu (Dự kiến: 2 tuần)
+**Mục tiêu:** Người dùng có thể bấm mic nói hoặc gõ text, App gọi API và hiển thị màn hình xác nhận giao dịch.
+
+* **Công việc cụ thể:**
+  * [ ] Xin quyền Microphone (Permissions) trên iOS/Android.
+  * [ ] Tích hợp `speech_to_text` bắt sự kiện thu âm và chuyển giọng nói thành text real-time.
+  * [ ] Viết logic gọi Supabase Edge Function (`parse-expense`) truyền text lên và nhận JSON về.
+  * [ ] Thiết kế Bottom Sheet/Dialog xác nhận: Hiển thị kết quả (Số tiền, Danh mục, Nguồn tiền). Cho phép user sửa thủ công nếu AI sai.
+  * [ ] Cập nhật Database: Bấm "Lưu" -> Insert vào `transactions` -> Chạy logic cập nhật lại số dư bảng `wallets`.
+* **Yêu cầu tài nguyên:**
+  * **Thiết bị thật (Real Device):** Smartphone Android hoặc iOS. (Bắt buộc vì Emulator thu âm micro thường hay lỗi/không chuẩn xác).
+
+### GIAI ĐOẠN 4: Dashboard, Thống kê & Phát hành (Dự kiến: 1.5 tuần)
+**Mục tiêu:** Hoàn thiện App với cái nhìn tổng quan đẹp mắt, kiểm thử toàn bộ tính năng và chuẩn bị đưa lên Store.
+
+* **Công việc cụ thể:**
+  * [ ] Code màn hình Home (Dashboard): Hiển thị Card tổng số dư, danh sách Ví và danh sách giao dịch gần đây.
+  * [ ] Tích hợp `fl_chart` vẽ biểu đồ tròn/cột phân bổ chi tiêu theo danh mục.
+  * [ ] Kiểm thử End-to-End: Test các câu thoại phức tạp, test thanh toán bằng thẻ tín dụng/trả sau.
+  * [ ] Thiết kế App Icon, Splash Screen (màn hình chờ) và cấu hình Package Name.
+  * [ ] Build file cài đặt (`.aab` cho Android, `.ipa` cho iOS).
+  * [ ] Tạo app trên Console, điền thông tin Store Listing và Submit review.
+* **Yêu cầu tài nguyên:**
+  * **Google Play Console:** Phí đăng ký $25 (Thanh toán 1 lần trọn đời). Cần thẻ Visa/Mastercard chính chủ và CCCD.
+  * **Apple Developer (Tùy chọn):** Phí $99/năm. Cần máy Mac để build và thẻ Visa/Mastercard.
+  * **Công cụ Design:** Tài khoản Figma/Canva để thiết kế Screenshots, banner đưa lên App Store / Play Store.
