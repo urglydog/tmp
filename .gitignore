@@ -1,0 +1,29 @@
+# Hệ điều hành & Công cụ
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Thư mục tạm của Antigravity/Gemini (Nếu có)
+.gemini/
+
+# Node (Dành cho Edge Functions nếu có package.json)
+node_modules/
+npm-debug.log
+
+# Supabase (Các file tạm nội bộ của CLI)
+supabase/.temp/
+
+# Flutter & Dart (Chuẩn bị sẵn cho thư mục app)
+**/build/
+**/.dart_tool/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.pub-cache/
+**/.pub/
+**/coverage/
+
+# Environment Variables (Quan trọng)
+.env
+.env.*
+*.env
