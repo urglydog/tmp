@@ -1,0 +1,521 @@
+<mxfile host="app.diagrams.net" agent="cursor">
+  <diagram name="AI-Powered LMS Complete Master Class Diagram" id="lms-master-class">
+    <mxGraphModel dx="3600" dy="2400" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3400" pageHeight="2200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ==================== ENUMS ==================== -->
+        <!-- Role Enum -->
+        <mxCell id="enum-role" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#F5F5F5;strokeColor=#666666;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:12px;padding:3px;&quot;&gt;&amp;lt;&amp;lt;enum&amp;gt;&amp;gt;&lt;br/&gt;Role&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #666666;margin:1px 0;&quot;/&gt;&lt;div style=&quot;padding:3px 6px;&quot;&gt;STUDENT&lt;br/&gt;INSTRUCTOR&lt;br/&gt;ADMIN&lt;/div&gt;" vertex="1">
+          <mxGeometry height="110" width="150" x="50" y="60" as="geometry" />
+        </mxCell>
+
+        <!-- PaymentStatus Enum -->
+        <mxCell id="enum-pay-status" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#F5F5F5;strokeColor=#666666;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:12px;padding:3px;&quot;&gt;&amp;lt;&amp;lt;enum&amp;gt;&amp;gt;&lt;br/&gt;PaymentStatus&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #666666;margin:1px 0;&quot;/&gt;&lt;div style=&quot;padding:3px 6px;&quot;&gt;PENDING&lt;br/&gt;PAID&lt;br/&gt;FAILED&lt;br/&gt;EXPIRED&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="150" x="50" y="560" as="geometry" />
+        </mxCell>
+
+        <!-- CourseStatus Enum -->
+        <mxCell id="enum-course-status" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#F5F5F5;strokeColor=#666666;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:12px;padding:3px;&quot;&gt;&amp;lt;&amp;lt;enum&amp;gt;&amp;gt;&lt;br/&gt;CourseStatus&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #666666;margin:1px 0;&quot;/&gt;&lt;div style=&quot;padding:3px 6px;&quot;&gt;DRAFT&lt;br/&gt;PENDING&lt;br/&gt;PUBLISHED&lt;br/&gt;REJECTED&lt;br/&gt;ARCHIVED&lt;/div&gt;" vertex="1">
+          <mxGeometry height="130" width="160" x="1100" y="60" as="geometry" />
+        </mxCell>
+
+        <!-- JobStatus Enum -->
+        <mxCell id="enum-job-status" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#F5F5F5;strokeColor=#666666;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:12px;padding:3px;&quot;&gt;&amp;lt;&amp;lt;enum&amp;gt;&amp;gt;&lt;br/&gt;JobStatus&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #666666;margin:1px 0;&quot;/&gt;&lt;div style=&quot;padding:3px 6px;&quot;&gt;PENDING&lt;br/&gt;PROCESSING&lt;br/&gt;COMPLETED&lt;br/&gt;FAILED&lt;br/&gt;SKIPPED&lt;/div&gt;" vertex="1">
+          <mxGeometry height="130" width="160" x="1750" y="60" as="geometry" />
+        </mxCell>
+
+        <!-- TrackStatus Enum -->
+        <mxCell id="enum-track-status" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#F5F5F5;strokeColor=#666666;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:12px;padding:3px;&quot;&gt;&amp;lt;&amp;lt;enum&amp;gt;&amp;gt;&lt;br/&gt;TrackStatus&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #666666;margin:1px 0;&quot;/&gt;&lt;div style=&quot;padding:3px 6px;&quot;&gt;PROCESSING&lt;br/&gt;PARTIAL&lt;br/&gt;COMPLETED&lt;br/&gt;FAILED&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="160" x="2330" y="60" as="geometry" />
+        </mxCell>
+
+        <!-- MaterialType Enum -->
+        <mxCell id="enum-material-type" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#F5F5F5;strokeColor=#666666;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:12px;padding:3px;&quot;&gt;&amp;lt;&amp;lt;enum&amp;gt;&amp;gt;&lt;br/&gt;MaterialType&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #666666;margin:1px 0;&quot;/&gt;&lt;div style=&quot;padding:3px 6px;&quot;&gt;MINDMAP&lt;br/&gt;FLASHCARD&lt;br/&gt;QUIZ&lt;/div&gt;" vertex="1">
+          <mxGeometry height="110" width="150" x="50" y="950" as="geometry" />
+        </mxCell>
+
+        <!-- ScopeType Enum -->
+        <mxCell id="enum-scope-type" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#F5F5F5;strokeColor=#666666;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:12px;padding:3px;&quot;&gt;&amp;lt;&amp;lt;enum&amp;gt;&amp;gt;&lt;br/&gt;ScopeType&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #666666;margin:1px 0;&quot;/&gt;&lt;div style=&quot;padding:3px 6px;&quot;&gt;WHOLE_COURSE&lt;br/&gt;CHAPTER&lt;br/&gt;COMPLETED_LESSONS&lt;/div&gt;" vertex="1">
+          <mxGeometry height="110" width="180" x="50" y="1080" as="geometry" />
+        </mxCell>
+
+        <!-- GenStatus Enum -->
+        <mxCell id="enum-gen-status" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#F5F5F5;strokeColor=#666666;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:12px;padding:3px;&quot;&gt;&amp;lt;&amp;lt;enum&amp;gt;&amp;gt;&lt;br/&gt;GenStatus&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #666666;margin:1px 0;&quot;/&gt;&lt;div style=&quot;padding:3px 6px;&quot;&gt;PENDING&lt;br/&gt;PROCESSING&lt;br/&gt;COMPLETED&lt;br/&gt;FAILED&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="150" x="50" y="1210" as="geometry" />
+        </mxCell>
+
+
+        <!-- ==================== PACKAGE 1: USER, COURSE & PAYMENT ==================== -->
+        <!-- User Class -->
+        <mxCell id="cls-user" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;User&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- email : String&lt;br/&gt;- passwordHash : String&lt;br/&gt;- fullName : String&lt;br/&gt;- avatarUrl : String&lt;br/&gt;- role : Role&lt;br/&gt;- authProvider : String&lt;br/&gt;- preferredLanguage : String&lt;br/&gt;- isActive : Boolean&lt;br/&gt;- createdAt : LocalDateTime&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;+ hasRole(role : Role) : boolean&lt;br/&gt;+ isOwnerOf(course : Course) : boolean&lt;/div&gt;" vertex="1">
+          <mxGeometry height="230" width="250" x="240" y="60" as="geometry" />
+        </mxCell>
+
+        <!-- InstructorRequest Class -->
+        <mxCell id="cls-inst-req" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;InstructorRequest&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- motivation : String&lt;br/&gt;- credentialUrl : String&lt;br/&gt;- status : RequestStatus&lt;br/&gt;- rejectReason : String&lt;br/&gt;- createdAt : LocalDateTime&lt;/div&gt;" vertex="1">
+          <mxGeometry height="150" width="220" x="530" y="60" as="geometry" />
+        </mxCell>
+
+        <!-- Notification Class -->
+        <mxCell id="cls-notification" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;Notification&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- type : String&lt;br/&gt;- title : String&lt;br/&gt;- content : String&lt;br/&gt;- linkUrl : String&lt;br/&gt;- isRead : Boolean&lt;/div&gt;" vertex="1">
+          <mxGeometry height="150" width="220" x="50" y="340" as="geometry" />
+        </mxCell>
+
+        <!-- Payment Class -->
+        <mxCell id="cls-payment" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;Payment&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- txnRef : String&lt;br/&gt;- amount : BigDecimal&lt;br/&gt;- platformFee : BigDecimal&lt;br/&gt;- instructorEarning : BigDecimal&lt;br/&gt;- paymentMethod : String&lt;br/&gt;- status : PaymentStatus&lt;br/&gt;- gatewayTxnNo : String&lt;br/&gt;- paidAt : LocalDateTime&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;+ calculateSplit(feePct : BigDecimal) : void&lt;/div&gt;" vertex="1">
+          <mxGeometry height="220" width="250" x="240" y="560" as="geometry" />
+        </mxCell>
+
+        <!-- Enrollment Class -->
+        <mxCell id="cls-enrollment" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;Enrollment&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- progressPct : BigDecimal&lt;br/&gt;- enrolledAt : LocalDateTime&lt;br/&gt;- completedAt : LocalDateTime&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;+ recalculateProgress() : void&lt;/div&gt;" vertex="1">
+          <mxGeometry height="140" width="220" x="530" y="560" as="geometry" />
+        </mxCell>
+
+        <!-- Category Class -->
+        <mxCell id="cls-category" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;Category&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- name : String&lt;br/&gt;- slug : String&lt;/div&gt;" vertex="1">
+          <mxGeometry height="100" width="200" x="850" y="60" as="geometry" />
+        </mxCell>
+
+        <!-- Course Class -->
+        <mxCell id="cls-course" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;Course&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- title : String&lt;br/&gt;- slug : String&lt;br/&gt;- description : String&lt;br/&gt;- thumbnailUrl : String&lt;br/&gt;- level : String&lt;br/&gt;- price : BigDecimal&lt;br/&gt;- isFree : Boolean&lt;br/&gt;- status : CourseStatus&lt;br/&gt;- rejectReason : String&lt;br/&gt;- avgRating : BigDecimal&lt;br/&gt;- totalLessons : Integer&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;+ canSubmitForReview() : boolean&lt;br/&gt;+ isAccessibleBy(user : User) : boolean&lt;/div&gt;" vertex="1">
+          <mxGeometry height="260" width="260" x="850" y="240" as="geometry" />
+        </mxCell>
+
+        <!-- Chapter Class -->
+        <mxCell id="cls-chapter" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;Chapter&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- title : String&lt;br/&gt;- displayOrder : Integer&lt;/div&gt;" vertex="1">
+          <mxGeometry height="100" width="220" x="1180" y="240" as="geometry" />
+        </mxCell>
+
+        <!-- Lesson Class -->
+        <mxCell id="cls-lesson" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;Lesson&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- title : String&lt;br/&gt;- videoSource : String&lt;br/&gt;- videoUrl : String&lt;br/&gt;- youtubeId : String&lt;br/&gt;- durationSec : Integer&lt;br/&gt;- sourceLanguage : String&lt;br/&gt;- displayOrder : Integer&lt;br/&gt;- isPreview : Boolean&lt;br/&gt;- status : String&lt;/div&gt;" vertex="1">
+          <mxGeometry height="220" width="240" x="1180" y="420" as="geometry" />
+        </mxCell>
+
+        <!-- LessonDocument Class -->
+        <mxCell id="cls-lesson-doc" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;LessonDocument&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- fileName : String&lt;br/&gt;- fileUrl : String&lt;br/&gt;- fileType : String&lt;br/&gt;- fileSize : Long&lt;/div&gt;" vertex="1">
+          <mxGeometry height="140" width="220" x="1470" y="420" as="geometry" />
+        </mxCell>
+
+        <!-- LessonProgress Class -->
+        <mxCell id="cls-lesson-progress" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;LessonProgress&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- lastPositionSec : Integer&lt;br/&gt;- watchedSec : Integer&lt;br/&gt;- isCompleted : Boolean&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;+ markCompletedIfReached(threshold : Integer) : void&lt;/div&gt;" vertex="1">
+          <mxGeometry height="150" width="230" x="850" y="560" as="geometry" />
+        </mxCell>
+
+        <!-- CourseReview Class -->
+        <mxCell id="cls-course-review" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;CourseReview&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- rating : Integer&lt;br/&gt;- comment : String&lt;br/&gt;- isHidden : Boolean&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="220" x="530" y="340" as="geometry" />
+        </mxCell>
+
+
+        <!-- ==================== PACKAGE 2: AI DUBBING PIPELINE ==================== -->
+        <!-- AiJob Class -->
+        <mxCell id="cls-ai-job" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;AiJob&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- jobType : String&lt;br/&gt;- targetLanguage : String&lt;br/&gt;- status : JobStatus&lt;br/&gt;- totalChunks : Integer&lt;br/&gt;- doneChunks : Integer&lt;br/&gt;- celeryTaskId : String&lt;br/&gt;- retryCount : Integer&lt;br/&gt;- errorMessage : String&lt;br/&gt;- startedAt : LocalDateTime&lt;br/&gt;- finishedAt : LocalDateTime&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;+ progressPercent() : int&lt;br/&gt;+ canRetry() : boolean&lt;/div&gt;" vertex="1">
+          <mxGeometry height="240" width="240" x="1750" y="220" as="geometry" />
+        </mxCell>
+
+        <!-- AiJobChunk Class -->
+        <mxCell id="cls-ai-job-chunk" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;AiJobChunk&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- chunkIndex : Integer&lt;br/&gt;- startSec : Integer&lt;br/&gt;- endSec : Integer&lt;br/&gt;- status : JobStatus&lt;br/&gt;- retryCount : Integer&lt;/div&gt;" vertex="1">
+          <mxGeometry height="150" width="220" x="1750" y="490" as="geometry" />
+        </mxCell>
+
+        <!-- Transcript Class -->
+        <mxCell id="cls-transcript" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;Transcript&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- language : String&lt;br/&gt;- isSource : Boolean&lt;br/&gt;- fullText : String&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="220" x="2040" y="220" as="geometry" />
+        </mxCell>
+
+        <!-- TranscriptSegment Class -->
+        <mxCell id="cls-transcript-segment" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;TranscriptSegment&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- seq : Integer&lt;br/&gt;- startSec : BigDecimal&lt;br/&gt;- endSec : BigDecimal&lt;br/&gt;- text : String&lt;br/&gt;- speechRate : BigDecimal&lt;br/&gt;- wasSummarized : Boolean&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;+ originalDuration() : BigDecimal&lt;/div&gt;" vertex="1">
+          <mxGeometry height="180" width="240" x="2040" y="390" as="geometry" />
+        </mxCell>
+
+        <!-- AudioTrack Class -->
+        <mxCell id="cls-audio-track" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;AudioTrack&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- language : String&lt;br/&gt;- voiceName : String&lt;br/&gt;- finalUrl : String&lt;br/&gt;- durationSec : Integer&lt;br/&gt;- fileSize : Long&lt;br/&gt;- status : TrackStatus&lt;br/&gt;- playCount : Long&lt;/div&gt;" vertex="1">
+          <mxGeometry height="190" width="240" x="2330" y="220" as="geometry" />
+        </mxCell>
+
+        <!-- AudioChunk Class -->
+        <mxCell id="cls-audio-chunk" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;AudioChunk&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- chunkIndex : Integer&lt;br/&gt;- startSec : Integer&lt;br/&gt;- endSec : Integer&lt;br/&gt;- fileUrl : String&lt;/div&gt;" vertex="1">
+          <mxGeometry height="140" width="220" x="2330" y="460" as="geometry" />
+        </mxCell>
+
+        <!-- VoiceMapping Class -->
+        <mxCell id="cls-voice-mapping" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;VoiceMapping&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- language : String&lt;br/&gt;- voiceName : String&lt;br/&gt;- gender : String&lt;br/&gt;- isDefault : Boolean&lt;br/&gt;- isActive : Boolean&lt;/div&gt;" vertex="1">
+          <mxGeometry height="150" width="220" x="2330" y="640" as="geometry" />
+        </mxCell>
+
+
+        <!-- ==================== PACKAGE 3: AI LEARNING MATERIALS & SOCRATIC TUTOR ==================== -->
+        <!-- MaterialGeneration Class -->
+        <mxCell id="cls-mat-gen" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;MaterialGeneration&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- materialType : MaterialType&lt;br/&gt;- language : String&lt;br/&gt;- scopeType : ScopeType&lt;br/&gt;- scopeRefId : Long&lt;br/&gt;- versionNo : Integer&lt;br/&gt;- title : String&lt;br/&gt;- status : GenStatus&lt;br/&gt;- celeryTaskId : String&lt;br/&gt;- errorMessage : String&lt;br/&gt;- createdAt : LocalDateTime&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;+ isReusableBy(user : User) : boolean&lt;/div&gt;" vertex="1">
+          <mxGeometry height="240" width="260" x="300" y="950" as="geometry" />
+        </mxCell>
+
+        <!-- Mindmap Class -->
+        <mxCell id="cls-mindmap" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;Mindmap&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- mermaidCode : String&lt;br/&gt;- nodeCount : Integer&lt;/div&gt;" vertex="1">
+          <mxGeometry height="110" width="200" x="600" y="950" as="geometry" />
+        </mxCell>
+
+        <!-- FlashcardDeck Class -->
+        <mxCell id="cls-fc-deck" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;FlashcardDeck&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- cardCount : Integer&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="200" x="840" y="950" as="geometry" />
+        </mxCell>
+
+        <!-- Flashcard Class -->
+        <mxCell id="cls-flashcard" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;Flashcard&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- frontText : String&lt;br/&gt;- backText : String&lt;/div&gt;" vertex="1">
+          <mxGeometry height="100" width="220" x="840" y="1100" as="geometry" />
+        </mxCell>
+
+        <!-- FlashcardReview Class -->
+        <mxCell id="cls-fc-review" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;FlashcardReview&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- easiness : BigDecimal&lt;br/&gt;- intervalDays : Integer&lt;br/&gt;- repetitions : Integer&lt;br/&gt;- nextReviewAt : LocalDate&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;+ applySM2(quality : int) : void&lt;/div&gt;" vertex="1">
+          <mxGeometry height="160" width="240" x="840" y="1260" as="geometry" />
+        </mxCell>
+
+        <!-- Quiz Class -->
+        <mxCell id="cls-quiz" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;Quiz&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- questionCount : Integer&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="200" x="1120" y="950" as="geometry" />
+        </mxCell>
+
+        <!-- QuizQuestion Class -->
+        <mxCell id="cls-quiz-question" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;QuizQuestion&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- content : String&lt;br/&gt;- displayOrder : Integer&lt;/div&gt;" vertex="1">
+          <mxGeometry height="100" width="220" x="1120" y="1100" as="geometry" />
+        </mxCell>
+
+        <!-- QuizOption Class -->
+        <mxCell id="cls-quiz-option" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;QuizOption&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- content : String&lt;br/&gt;- isCorrect : Boolean&lt;/div&gt;" vertex="1">
+          <mxGeometry height="100" width="200" x="1120" y="1260" as="geometry" />
+        </mxCell>
+
+        <!-- QuizAttempt Class -->
+        <mxCell id="cls-quiz-attempt" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;QuizAttempt&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- score : BigDecimal&lt;br/&gt;- totalQuestions : Integer&lt;br/&gt;- correctCount : Integer&lt;br/&gt;- submittedAt : LocalDateTime&lt;/div&gt;" vertex="1">
+          <mxGeometry height="140" width="220" x="1380" y="950" as="geometry" />
+        </mxCell>
+
+        <!-- QuizAnswer Class -->
+        <mxCell id="cls-quiz-answer" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;QuizAnswer&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- isCorrect : Boolean&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="200" x="1380" y="1150" as="geometry" />
+        </mxCell>
+
+        <!-- ChatSession Class -->
+        <mxCell id="cls-chat-session" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;ChatSession&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- createdAt : LocalDateTime&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="220" x="1750" y="950" as="geometry" />
+        </mxCell>
+
+        <!-- ChatMessage Class -->
+        <mxCell id="cls-chat-message" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#DAE8FC;strokeColor=#6C8EBF;strokeWidth=1.5;fontSize=11;overflow=fill;" value="&lt;div style=&quot;text-align:center;font-weight:bold;font-size:13px;padding:4px;&quot;&gt;ChatMessage&lt;/div&gt;&lt;hr style=&quot;border:none;border-top:1px solid #6C8EBF;margin:2px 0;&quot;/&gt;&lt;div style=&quot;padding:2px 6px;&quot;&gt;- id : Long&lt;br/&gt;- sender : String&lt;br/&gt;- content : String&lt;br/&gt;- citedTimestamps : String&lt;br/&gt;- tokenUsed : Integer&lt;/div&gt;" vertex="1">
+          <mxGeometry height="140" width="240" x="1750" y="1100" as="geometry" />
+        </mxCell>
+
+
+        <!-- ==================== RELATIONSHIPS ==================== -->
+
+        <!-- ENUM DEPENDENCIES -->
+        <!-- Role ╌╌> User -->
+        <mxCell id="rel-role-user" edge="1" parent="1" source="cls-user" target="enum-role" style="endArrow=open;dashed=1;html=1;strokeColor=#444444;labelBackgroundColor=#FFFFFF;fontSize=11;exitX=0;exitY=0.2;entryX=1;entryY=0.5;" value="&amp;lt;&amp;lt;type&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- PaymentStatus ╌╌> Payment -->
+        <mxCell id="rel-paystatus-payment" edge="1" parent="1" source="cls-payment" target="enum-pay-status" style="endArrow=open;dashed=1;html=1;strokeColor=#444444;labelBackgroundColor=#FFFFFF;fontSize=11;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" value="&amp;lt;&amp;lt;type&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- CourseStatus ╌╌> Course -->
+        <mxCell id="rel-coursestatus-course" edge="1" parent="1" source="cls-course" target="enum-course-status" style="endArrow=open;dashed=1;html=1;strokeColor=#444444;labelBackgroundColor=#FFFFFF;fontSize=11;exitX=1;exitY=0.2;entryX=0;entryY=0.5;" value="&amp;lt;&amp;lt;type&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- JobStatus ╌╌> AiJob -->
+        <mxCell id="rel-jobstatus-aijob" edge="1" parent="1" source="cls-ai-job" target="enum-job-status" style="endArrow=open;dashed=1;html=1;strokeColor=#444444;labelBackgroundColor=#FFFFFF;fontSize=11;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" value="&amp;lt;&amp;lt;type&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- TrackStatus ╌╌> AudioTrack -->
+        <mxCell id="rel-trackstatus-audiotrack" edge="1" parent="1" source="cls-audio-track" target="enum-track-status" style="endArrow=open;dashed=1;html=1;strokeColor=#444444;labelBackgroundColor=#FFFFFF;fontSize=11;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" value="&amp;lt;&amp;lt;type&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- MaterialType ╌╌> MaterialGeneration -->
+        <mxCell id="rel-mat-type" edge="1" parent="1" source="cls-mat-gen" target="enum-material-type" style="endArrow=open;dashed=1;html=1;strokeColor=#444444;labelBackgroundColor=#FFFFFF;fontSize=11;exitX=0;exitY=0.2;entryX=1;entryY=0.5;" value="&amp;lt;&amp;lt;type&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- ScopeType ╌╌> MaterialGeneration -->
+        <mxCell id="rel-scope-type" edge="1" parent="1" source="cls-mat-gen" target="enum-scope-type" style="endArrow=open;dashed=1;html=1;strokeColor=#444444;labelBackgroundColor=#FFFFFF;fontSize=11;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" value="&amp;lt;&amp;lt;type&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- GenStatus ╌╌> MaterialGeneration -->
+        <mxCell id="rel-gen-status" edge="1" parent="1" source="cls-mat-gen" target="enum-gen-status" style="endArrow=open;dashed=1;html=1;strokeColor=#444444;labelBackgroundColor=#FFFFFF;fontSize=11;exitX=0;exitY=0.8;entryX=1;entryY=0.5;" value="&amp;lt;&amp;lt;type&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+
+        <!-- PACKAGE 1 RELATIONSHIPS -->
+        <!-- User 1 ── 0..* InstructorRequest -->
+        <mxCell id="r-u-req" edge="1" parent="1" source="cls-user" target="cls-inst-req" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;exitX=1;exitY=0.3;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l-ur1" parent="r-u-req" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=11;" value="1" vertex="1" connectable="0">
+          <mxGeometry x="-0.8" relative="1" as="geometry"><mxPoint y="-5" as="offset" /></mxGeometry>
+        </mxCell>
+        <mxCell id="l-ur2" parent="r-u-req" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=11;" value="0..*" vertex="1" connectable="0">
+          <mxGeometry x="0.8" relative="1" as="geometry"><mxPoint y="-5" as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- User 1 ── 0..* Notification -->
+        <mxCell id="r-u-notif" edge="1" parent="1" source="cls-user" target="cls-notification" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.8;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l-un1" parent="r-u-notif" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=11;" value="1" vertex="1" connectable="0">
+          <mxGeometry x="-0.8" relative="1" as="geometry"><mxPoint y="-5" as="offset" /></mxGeometry>
+        </mxCell>
+        <mxCell id="l-un2" parent="r-u-notif" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=11;" value="0..*" vertex="1" connectable="0">
+          <mxGeometry x="0.8" relative="1" as="geometry"><mxPoint x="10" as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- User 1 ── 0..* Payment -->
+        <mxCell id="r-u-pay" edge="1" parent="1" source="cls-user" target="cls-payment" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l-up1" parent="r-u-pay" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=11;" value="1" vertex="1" connectable="0">
+          <mxGeometry x="-0.8" relative="1" as="geometry"><mxPoint x="10" as="offset" /></mxGeometry>
+        </mxCell>
+        <mxCell id="l-up2" parent="r-u-pay" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=11;" value="0..*" vertex="1" connectable="0">
+          <mxGeometry x="0.8" relative="1" as="geometry"><mxPoint x="10" as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- User 1 ── 0..* Enrollment -->
+        <mxCell id="r-u-enroll" edge="1" parent="1" source="cls-user" target="cls-enrollment" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;exitX=0.8;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l-ue1" parent="r-u-enroll" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=11;" value="1" vertex="1" connectable="0">
+          <mxGeometry x="-0.8" relative="1" as="geometry"><mxPoint x="10" as="offset" /></mxGeometry>
+        </mxCell>
+        <mxCell id="l-ue2" parent="r-u-enroll" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=11;" value="0..*" vertex="1" connectable="0">
+          <mxGeometry x="0.8" relative="1" as="geometry"><mxPoint x="10" as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- User 1 ── 0..* Course (Instructor Role) -->
+        <mxCell id="r-u-course" edge="1" parent="1" source="cls-user" target="cls-course" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.8;entryX=0;entryY=0.2;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l-uc1" parent="r-u-course" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=11;" value="1" vertex="1" connectable="0">
+          <mxGeometry x="-0.8" relative="1" as="geometry"><mxPoint y="-5" as="offset" /></mxGeometry>
+        </mxCell>
+        <mxCell id="l-uc2" parent="r-u-course" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=11;" value="0..*" vertex="1" connectable="0">
+          <mxGeometry x="0.8" relative="1" as="geometry"><mxPoint y="-5" as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- User 1 ── 0..* CourseReview -->
+        <mxCell id="r-u-rev" edge="1" parent="1" source="cls-user" target="cls-course-review" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;exitX=0.9;exitY=1;entryX=0.2;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- User 1 ── 0..* LessonProgress -->
+        <mxCell id="r-u-lp" edge="1" parent="1" source="cls-user" target="cls-lesson-progress" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;exitX=0.7;exitY=1;entryX=0;entryY=0.2;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Category 1 ── 0..* Course -->
+        <mxCell id="r-cat-course" edge="1" parent="1" source="cls-category" target="cls-course" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l-cc1" parent="r-cat-course" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=11;" value="1" vertex="1" connectable="0">
+          <mxGeometry x="-0.8" relative="1" as="geometry"><mxPoint x="10" as="offset" /></mxGeometry>
+        </mxCell>
+        <mxCell id="l-cc2" parent="r-cat-course" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=11;" value="0..*" vertex="1" connectable="0">
+          <mxGeometry x="0.8" relative="1" as="geometry"><mxPoint x="10" as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- Course 1 ◆── 1..* Chapter -->
+        <mxCell id="r-c-ch" edge="1" parent="1" source="cls-course" target="cls-chapter" style="startArrow=diamond;startSize=12;startFill=1;endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;exitX=1;exitY=0.2;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l-ch1" parent="r-c-ch" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=11;" value="1" vertex="1" connectable="0">
+          <mxGeometry x="-0.8" relative="1" as="geometry"><mxPoint y="-5" as="offset" /></mxGeometry>
+        </mxCell>
+        <mxCell id="l-ch2" parent="r-c-ch" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=11;" value="1..*" vertex="1" connectable="0">
+          <mxGeometry x="0.8" relative="1" as="geometry"><mxPoint y="-5" as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- Chapter 1 ◆── 1..* Lesson -->
+        <mxCell id="r-ch-les" edge="1" parent="1" source="cls-chapter" target="cls-lesson" style="startArrow=diamond;startSize=12;startFill=1;endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l-cl1" parent="r-ch-les" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=11;" value="1" vertex="1" connectable="0">
+          <mxGeometry x="-0.8" relative="1" as="geometry"><mxPoint x="10" as="offset" /></mxGeometry>
+        </mxCell>
+        <mxCell id="l-cl2" parent="r-ch-les" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=11;" value="1..*" vertex="1" connectable="0">
+          <mxGeometry x="0.8" relative="1" as="geometry"><mxPoint x="10" as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- Lesson 1 ◆── 0..* LessonDocument -->
+        <mxCell id="r-l-doc" edge="1" parent="1" source="cls-lesson" target="cls-lesson-doc" style="startArrow=diamond;startSize=12;startFill=1;endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l-ld1" parent="r-l-doc" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=11;" value="1" vertex="1" connectable="0">
+          <mxGeometry x="-0.8" relative="1" as="geometry"><mxPoint y="-5" as="offset" /></mxGeometry>
+        </mxCell>
+        <mxCell id="l-ld2" parent="r-l-doc" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=11;" value="0..*" vertex="1" connectable="0">
+          <mxGeometry x="0.8" relative="1" as="geometry"><mxPoint y="-5" as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- Course 1 ── 0..* Enrollment -->
+        <mxCell id="r-c-en" edge="1" parent="1" source="cls-course" target="cls-enrollment" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;exitX=0.2;exitY=1;entryX=1;entryY=0.2;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Course 1 ── 0..* Payment -->
+        <mxCell id="r-c-pay" edge="1" parent="1" source="cls-course" target="cls-payment" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.8;entryX=1;entryY=0.2;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Course 1 ── 0..* CourseReview -->
+        <mxCell id="r-c-rev" edge="1" parent="1" source="cls-course" target="cls-course-review" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;exitX=0;exitY=0.5;entryX=1;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Lesson 1 ── 0..* LessonProgress -->
+        <mxCell id="r-l-lp" edge="1" parent="1" source="cls-lesson" target="cls-lesson-progress" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.8;entryX=1;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Payment 0..1 ── 0..1 Enrollment -->
+        <mxCell id="r-p-en" edge="1" parent="1" source="cls-payment" target="cls-enrollment" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+
+        <!-- PACKAGE 2 RELATIONSHIPS -->
+        <!-- Lesson 1 ── 0..* AiJob -->
+        <mxCell id="r-l-aijob" edge="1" parent="1" source="cls-lesson" target="cls-ai-job" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.2;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Lesson 1 ── 0..* Transcript -->
+        <mxCell id="r-l-tr" edge="1" parent="1" source="cls-lesson" target="cls-transcript" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.3;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Lesson 1 ── 0..* AudioTrack -->
+        <mxCell id="r-l-at" edge="1" parent="1" source="cls-lesson" target="cls-audio-track" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.4;entryX=0;entryY=0.2;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- AiJob 1 ◆── 1..* AiJobChunk -->
+        <mxCell id="r-job-chunk" edge="1" parent="1" source="cls-ai-job" target="cls-ai-job-chunk" style="startArrow=diamond;startSize=12;startFill=1;endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Transcript 1 ◆── 1..* TranscriptSegment -->
+        <mxCell id="r-tr-seg" edge="1" parent="1" source="cls-transcript" target="cls-transcript-segment" style="startArrow=diamond;startSize=12;startFill=1;endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- AudioTrack 1 ◆── 0..* AudioChunk -->
+        <mxCell id="r-at-achunk" edge="1" parent="1" source="cls-audio-track" target="cls-audio-chunk" style="startArrow=diamond;startSize=12;startFill=1;endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- VoiceMapping 1 ── 0..* AudioTrack -->
+        <mxCell id="r-vm-at" edge="1" parent="1" source="cls-voice-mapping" target="cls-audio-track" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;exitX=0.5;exitY=0;entryX=0.5;entryY=1;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+
+        <!-- PACKAGE 3 RELATIONSHIPS -->
+        <!-- User 1 ── 0..* MaterialGeneration -->
+        <mxCell id="r-u-matgen" edge="1" parent="1" source="cls-user" target="cls-mat-gen" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;entryX=0.2;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Course 1 ── 0..* MaterialGeneration -->
+        <mxCell id="r-c-matgen" edge="1" parent="1" source="cls-course" target="cls-mat-gen" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;entryX=0.8;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- MaterialGeneration 1 ◆── 0..1 Mindmap -->
+        <mxCell id="r-mg-mm" edge="1" parent="1" source="cls-mat-gen" target="cls-mindmap" style="startArrow=diamond;startSize=12;startFill=1;endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;exitX=1;exitY=0.2;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- MaterialGeneration 1 ◆── 0..1 FlashcardDeck -->
+        <mxCell id="r-mg-fcdeck" edge="1" parent="1" source="cls-mat-gen" target="cls-fc-deck" style="startArrow=diamond;startSize=12;startFill=1;endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.4;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- MaterialGeneration 1 ◆── 0..1 Quiz -->
+        <mxCell id="r-mg-quiz" edge="1" parent="1" source="cls-mat-gen" target="cls-quiz" style="startArrow=diamond;startSize=12;startFill=1;endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.6;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- FlashcardDeck 1 ◆── 1..* Flashcard -->
+        <mxCell id="r-fcd-fc" edge="1" parent="1" source="cls-fc-deck" target="cls-flashcard" style="startArrow=diamond;startSize=12;startFill=1;endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Flashcard 1 ── 0..* FlashcardReview -->
+        <mxCell id="r-fc-fcr" edge="1" parent="1" source="cls-flashcard" target="cls-fc-review" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- User 1 ── 0..* FlashcardReview -->
+        <mxCell id="r-u-fcr" edge="1" parent="1" source="cls-user" target="cls-fc-review" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;exitX=0.1;exitY=1;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Quiz 1 ◆── 1..* QuizQuestion -->
+        <mxCell id="r-q-qq" edge="1" parent="1" source="cls-quiz" target="cls-quiz-question" style="startArrow=diamond;startSize=12;startFill=1;endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- QuizQuestion 1 ◆── 4 QuizOption -->
+        <mxCell id="r-qq-qo" edge="1" parent="1" source="cls-quiz-question" target="cls-quiz-option" style="startArrow=diamond;startSize=12;startFill=1;endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l-qo1" parent="r-qq-qo" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=11;" value="1" vertex="1" connectable="0">
+          <mxGeometry x="-0.8" relative="1" as="geometry"><mxPoint x="10" as="offset" /></mxGeometry>
+        </mxCell>
+        <mxCell id="l-qo2" parent="r-qq-qo" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=11;" value="4" vertex="1" connectable="0">
+          <mxGeometry x="0.8" relative="1" as="geometry"><mxPoint x="10" as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- Quiz 1 ── 0..* QuizAttempt -->
+        <mxCell id="r-q-qa" edge="1" parent="1" source="cls-quiz" target="cls-quiz-attempt" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- User 1 ── 0..* QuizAttempt -->
+        <mxCell id="r-u-qa" edge="1" parent="1" source="cls-user" target="cls-quiz-attempt" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;exitX=0.3;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- QuizAttempt 1 ◆── 1..* QuizAnswer -->
+        <mxCell id="r-qa-qans" edge="1" parent="1" source="cls-quiz-attempt" target="cls-quiz-answer" style="startArrow=diamond;startSize=12;startFill=1;endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- QuizQuestion 1 ── 0..* QuizAnswer -->
+        <mxCell id="r-qq-qans" edge="1" parent="1" source="cls-quiz-question" target="cls-quiz-answer" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- User 1 ── 0..* ChatSession -->
+        <mxCell id="r-u-chatses" edge="1" parent="1" source="cls-user" target="cls-chat-session" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;exitX=0.4;exitY=1;entryX=0.2;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Lesson 1 ── 0..* ChatSession -->
+        <mxCell id="r-l-chatses" edge="1" parent="1" source="cls-lesson" target="cls-chat-session" style="endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;exitX=0.8;exitY=1;entryX=0.8;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ChatSession 1 ◆── 0..* ChatMessage -->
+        <mxCell id="r-cs-cm" edge="1" parent="1" source="cls-chat-session" target="cls-chat-message" style="startArrow=diamond;startSize=12;startFill=1;endArrow=none;html=1;strokeColor=#000000;strokeWidth=1.5;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Title -->
+        <mxCell id="title" parent="1" style="text;html=1;align=center;fontSize=22;fontStyle=1;fontColor=#333333;" value="AI-Powered LMS Unified Master Class Diagram (Complete Integration of Packages 1, 2 &amp; 3)" vertex="1">
+          <mxGeometry height="45" width="1200" x="1100" y="2100" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

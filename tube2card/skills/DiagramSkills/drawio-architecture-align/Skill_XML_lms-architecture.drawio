@@ -1,0 +1,209 @@
+<mxfile host="app.diagrams.net" agent="cursor">
+  <diagram name="AI-Powered LMS Architecture" id="lms-arch">
+    <mxGraphModel dx="2600" dy="1600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2400" pageHeight="1400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Tier 1: Clients & Actors -->
+        <mxCell id="grp-clients" parent="1" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=#D5E8D4;strokeColor=#82B366;verticalAlign=top;fontSize=14;fontStyle=1;align=center;" value="Clients Tier" vertex="1">
+          <mxGeometry height="800" width="220" x="40" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-student" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;labelBackgroundColor=none;verticalAlign=top;html=1;outlineConnect=0;fontSize=12;fontStyle=1;" value="Student" vertex="1">
+          <mxGeometry height="70" width="35" x="55" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-instructor" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;labelBackgroundColor=none;verticalAlign=top;html=1;outlineConnect=0;fontSize=12;fontStyle=1;" value="Instructor" vertex="1">
+          <mxGeometry height="70" width="35" x="145" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-admin" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;labelBackgroundColor=none;verticalAlign=top;html=1;outlineConnect=0;fontSize=12;fontStyle=1;" value="Admin" vertex="1">
+          <mxGeometry height="70" width="35" x="100" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="cli-nextjs" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9DD0C7;strokeColor=#0E8074;fontColor=#FFFFFF;fontSize=13;fontStyle=1;" value="Next.js / ReactJS Web App&#xa;(Dual-Player Video/Audio Sync)" vertex="1">
+          <mxGeometry height="75" width="190" x="55" y="340" as="geometry" />
+        </mxCell>
+        
+        <!-- Tier 2: Core Business Tier -->
+        <mxCell id="grp-core" parent="1" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=#E1D5E7;strokeColor=#9673A6;verticalAlign=top;fontSize=14;fontStyle=1;align=center;" value="Core Business Tier" vertex="1">
+          <mxGeometry height="800" width="240" x="300" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="svc-spring" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2F5B7C;strokeColor=#1A3A52;fontColor=#FFFFFF;fontSize=13;fontStyle=1;" value="Java Spring Boot Backend API&#xa;(Auth / RBAC / LMS Business /&#xa;Progress &amp; Score Management)&#xa;:8080" vertex="1">
+          <mxGeometry height="90" width="200" x="320" y="333" as="geometry" />
+        </mxCell>
+        
+        <!-- Tier 3: AI Processing & Multi-Agent Tier -->
+        <mxCell id="grp-ai" parent="1" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=#FFE6CC;strokeColor=#D79B00;verticalAlign=top;fontSize=14;fontStyle=1;align=center;" value="AI Worker &amp; Multi-Agent Tier" vertex="1">
+          <mxGeometry height="1100" width="380" x="580" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="svc-fastapi" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D04AC7;strokeColor=#83307D;fontColor=#FFFFFF;fontSize=13;fontStyle=1;" value="Python FastAPI &amp; Celery Worker&#xa;(AI Microservice Core)&#xa;:8000" vertex="1">
+          <mxGeometry height="70" width="340" x="600" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="mod-videolingo" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E07B00;strokeColor=#9E5500;fontColor=#FFFFFF;fontSize=12;fontStyle=1;" value="VideoLingo Dubbing Engine&#xa;- FFmpeg Layered Chunking (10m)&#xa;- Whisper Large-v3 (STT)&#xa;- Gemini 1.5 Flash (3-step Trans)&#xa;- Adaptive Speed Rate (TTS)" vertex="1">
+          <mxGeometry height="95" width="340" x="600" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="agent-orch" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#3FA34D;strokeColor=#1E6E2B;fontColor=#FFFFFF;fontSize=12;fontStyle=1;" value="Orchestrator Agent&#xa;(Pipeline &amp; Job Dispatcher)" vertex="1">
+          <mxGeometry height="55" width="340" x="600" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="agent-creator" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1F8FE0;strokeColor=#0F5C99;fontColor=#FFFFFF;fontSize=12;fontStyle=1;" value="Creator Agent&#xa;(Auto-generates Mindmaps via Mermaid.js,&#xa;Flashcards &amp; Quizzes)" vertex="1">
+          <mxGeometry height="65" width="340" x="600" y="405" as="geometry" />
+        </mxCell>
+        <mxCell id="agent-socratic" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7B3F99;strokeColor=#4A2360;fontColor=#FFFFFF;fontSize=12;fontStyle=1;" value="Socratic Tutor Agent&#xa;(Context-aware Pedagogical Q&amp;A Chatbot&#xa;with Video Timestamps)" vertex="1">
+          <mxGeometry height="65" width="340" x="600" y="500" as="geometry" />
+        </mxCell>
+
+        <!-- Tier 4: Event & Realtime Tier -->
+        <mxCell id="grp-event" parent="1" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=#FFF2CC;strokeColor=#D6B656;verticalAlign=top;fontSize=14;fontStyle=1;align=center;" value="Event &amp; Realtime Tier" vertex="1">
+          <mxGeometry height="800" width="240" x="1000" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="broker-redis" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FF9800;strokeColor=#E65100;fontColor=#FFFFFF;fontSize=12;fontStyle=1;" value="Redis Queue / RabbitMQ&#xa;(Async Video Dubbing Jobs)" vertex="1">
+          <mxGeometry height="70" width="200" x="1020" y="207" as="geometry" />
+        </mxCell>
+        <mxCell id="ws-socketio" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0B7E7E;strokeColor=#055050;fontColor=#FFFFFF;fontSize=12;fontStyle=1;" value="Socket.io Server&#xa;(Real-time Live Progress &amp; Chat)&#xa;:3001" vertex="1">
+          <mxGeometry height="70" width="200" x="1020" y="497" as="geometry" />
+        </mxCell>
+
+        <!-- Tier 5: Databases & Cloud Storage -->
+        <mxCell id="grp-db" parent="1" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=#F5F5F5;strokeColor=#666666;verticalAlign=top;fontSize=14;fontStyle=1;align=center;" value="Databases &amp; Cloud Storage" vertex="1">
+          <mxGeometry height="1100" width="260" x="1280" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="db-postgres" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#CFD8DC;strokeColor=#546E7A;fontSize=12;fontStyle=1;" value="PostgreSQL DB&#xa;(Users, Courses, Lessons,&#xa;Progress, Quizzes)" vertex="1">
+          <mxGeometry height="80" width="200" x="1310" y="75" as="geometry" />
+        </mxCell>
+        <mxCell id="cache-redis" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#FFE0B2;strokeColor=#FB8C00;fontSize=12;fontStyle=1;" value="Redis Cache &amp; Session Store" vertex="1">
+          <mxGeometry height="70" width="200" x="1310" y="207" as="geometry" />
+        </mxCell>
+        <mxCell id="db-vector" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#D1C4E9;strokeColor=#512DA8;fontSize=12;fontStyle=1;" value="Vector DB (Qdrant / Supabase)&#xa;(RAG Context Retrieval Store)" vertex="1">
+          <mxGeometry height="70" width="200" x="1310" y="497" as="geometry" />
+        </mxCell>
+        <mxCell id="storage-b2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#607D8B;strokeColor=#37474F;fontColor=#FFFFFF;fontSize=12;fontStyle=1;" value="Backblaze B2 / Supabase Storage&#xa;+ Cloudflare CDN&#xa;(Audio .mp3 Dubbed Files)" vertex="1">
+          <mxGeometry height="70" width="200" x="1310" y="680" as="geometry" />
+        </mxCell>
+
+        <!-- Tier 6: External APIs & Services -->
+        <mxCell id="grp-ext" parent="1" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=#F8CECC;strokeColor=#B85450;verticalAlign=top;fontSize=14;fontStyle=1;align=center;" value="External APIs &amp; Services" vertex="1">
+          <mxGeometry height="800" width="240" x="1580" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ext-youtube" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E74C3C;strokeColor=#922B21;fontColor=#FFFFFF;fontSize=12;fontStyle=1;" value="YouTube Data API&#xa;(Public Video Embed / Stream)" vertex="1">
+          <mxGeometry height="60" width="200" x="1600" y="85" as="geometry" />
+        </mxCell>
+        <mxCell id="ext-gemini" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E74C3C;strokeColor=#922B21;fontColor=#FFFFFF;fontSize=12;fontStyle=1;" value="Google Gemini 1.5 Flash API&#xa;(3-step Trans &amp; LLM Reasoning)" vertex="1">
+          <mxGeometry height="60" width="200" x="1600" y="212" as="geometry" />
+        </mxCell>
+        <mxCell id="ext-edgetts" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E74C3C;strokeColor=#922B21;fontColor=#FFFFFF;fontSize=12;fontStyle=1;" value="Edge-TTS Voice Engine&#xa;(Multi-lingual Voice Synthesis)" vertex="1">
+          <mxGeometry height="60" width="200" x="1600" y="325" as="geometry" />
+        </mxCell>
+
+        <!-- Edges / Connectors -->
+        <!-- All 3 Actors -> Next.js Web App -->
+        <mxCell id="e-act-student" edge="1" parent="1" source="actor-student" target="cli-nextjs" style="endArrow=classicThin;html=1;rounded=0;strokeColor=#000000;exitX=0.5;exitY=1;entryX=0.2;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-act-instructor" edge="1" parent="1" source="actor-instructor" target="cli-nextjs" style="endArrow=classicThin;html=1;rounded=0;strokeColor=#000000;exitX=0.5;exitY=1;entryX=0.8;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-act-admin" edge="1" parent="1" source="actor-admin" target="cli-nextjs" style="endArrow=classicThin;html=1;rounded=0;strokeColor=#000000;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Frontend -> Core Spring Boot API -->
+        <mxCell id="e-cli-spring" edge="1" parent="1" source="cli-nextjs" target="svc-spring" style="endArrow=classicThin;html=1;rounded=0;fontSize=10;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" value="REST API / HTTPS">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Core Spring Boot -> Redis Broker Job -->
+        <mxCell id="e-spring-redis" edge="1" parent="1" source="svc-spring" target="broker-redis" style="endArrow=classicThin;html=1;rounded=0;dashed=1;fontSize=10;fontColor=#E65100;labelBackgroundColor=#FFFFFF;strokeColor=#E65100;exitX=1;exitY=0.3;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;" value="Publish Dubbing Job">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="550" y="360" />
+              <mxPoint x="550" y="242" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Redis Broker -> FastAPI Worker -->
+        <mxCell id="e-redis-fastapi" edge="1" parent="1" source="broker-redis" target="svc-fastapi" style="endArrow=classicThin;html=1;rounded=0;dashed=1;fontSize=10;fontColor=#E65100;labelBackgroundColor=#FFFFFF;strokeColor=#E65100;exitX=0;exitY=0.3;entryX=1;entryY=0.5;edgeStyle=orthogonalEdgeStyle;" value="Consume Job (Celery)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="970" y="228" />
+              <mxPoint x="970" y="115" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- FastAPI -> VideoLingo Pipeline -->
+        <mxCell id="e-fastapi-vl" edge="1" parent="1" source="svc-fastapi" target="mod-videolingo" style="endArrow=classicThin;html=1;rounded=0;fontSize=10;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" value="Execute Pipeline">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- VideoLingo -> Gemini API -->
+        <mxCell id="e-vl-gemini" edge="1" parent="1" source="mod-videolingo" target="ext-gemini" style="endArrow=classicThin;html=1;rounded=0;fontSize=10;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;" value="3-step Translation">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- VideoLingo -> Edge-TTS -->
+        <mxCell id="e-vl-edgetts" edge="1" parent="1" source="mod-videolingo" target="ext-edgetts" style="endArrow=classicThin;html=1;rounded=0;fontSize=10;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.8;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;" value="Synthesize Audio">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="970" y="271" />
+              <mxPoint x="970" y="355" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- VideoLingo -> Storage B2 -->
+        <mxCell id="e-vl-storage" edge="1" parent="1" source="mod-videolingo" target="storage-b2" style="endArrow=classicThin;html=1;rounded=0;fontSize=10;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.9;entryX=0;entryY=0.3;edgeStyle=orthogonalEdgeStyle;" value="Save .mp3 files">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="960" y="280" />
+              <mxPoint x="960" y="701" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Socratic Agent -> Vector DB -->
+        <mxCell id="e-socratic-vector" edge="1" parent="1" source="agent-socratic" target="db-vector" style="endArrow=classicThin;html=1;rounded=0;fontSize=10;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" value="RAG Query">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Socratic Agent -> Socket.io Server -->
+        <mxCell id="e-socratic-ws" edge="1" parent="1" source="agent-socratic" target="ws-socketio" style="endArrow=classicThin;html=1;rounded=0;fontSize=10;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.3;entryX=0;entryY=0.5;" value="Stream Chat Tokens">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Socket.io -> Client Web App -->
+        <mxCell id="e-ws-cli" edge="1" parent="1" source="ws-socketio" target="cli-nextjs" style="endArrow=classicThin;html=1;rounded=0;dashed=1;fontSize=10;fontColor=#0B7E7E;labelBackgroundColor=#FFFFFF;strokeColor=#0B7E7E;exitX=0;exitY=0.8;entryX=1;entryY=0.8;edgeStyle=orthogonalEdgeStyle;" value="WebSockets Realtime Live">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1000" y="553" />
+              <mxPoint x="1000" y="630" />
+              <mxPoint x="280" y="630" />
+              <mxPoint x="280" y="400" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Spring Boot -> PostgreSQL DB -->
+        <mxCell id="e-spring-db" edge="1" parent="1" source="svc-spring" target="db-postgres" style="endArrow=classicThin;html=1;rounded=0;fontSize=10;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=0;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;" value="JPA / Read-Write">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="420" y="115" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Client Web App -> Storage B2 / CDN -->
+        <mxCell id="e-cli-storage" edge="1" parent="1" source="cli-nextjs" target="storage-b2" style="endArrow=classicThin;html=1;rounded=0;fontSize=10;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0;entryY=0.8;edgeStyle=orthogonalEdgeStyle;" value="Audio MP3 Dual Stream">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="150" y="736" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Title -->
+        <mxCell id="title" parent="1" style="text;html=1;align=center;fontSize=20;fontStyle=1;fontColor=#333333;" value="AI-Powered LMS System Architecture Diagram" vertex="1">
+          <mxGeometry height="40" width="800" x="700" y="1200" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,493 @@
+<mxfile host="app.diagrams.net" agent="cursor">
+  <diagram name="AI-Powered LMS Complete Master Use Case Diagram" id="lms-uc-master">
+    <mxGraphModel dx="3600" dy="2400" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2400" pageHeight="2300" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Master System Boundary -->
+        <mxCell id="sys-boundary" parent="1" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=none;strokeColor=#444444;strokeWidth=2;verticalAlign=top;fontSize=16;fontStyle=1;align=center;" value="Hệ Thống AI-Powered LMS (Unified System Boundary)" vertex="1">
+          <mxGeometry height="2150" width="2060" x="160" y="40" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== SUBSYSTEM CARD A: AUTH & ACCOUNT ==================== -->
+        <mxCell id="card-auth" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#D6D6D6;verticalAlign=top;fontSize=13;fontStyle=1;align=center;" value="" vertex="1">
+          <mxGeometry height="430" width="760" x="190" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="uc01" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC01 Đăng ký tài khoản&#xa;(OTP Email)" vertex="1">
+          <mxGeometry height="55" width="190" x="210" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="uc04" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC04 Quên mật khẩu&#xa;(OTP Email)" vertex="1">
+          <mxGeometry height="55" width="190" x="440" y="140" as="geometry" />
+        </mxCell>
+        
+        <!-- Central Login Use Case -->
+        <mxCell id="uc02" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=13;fontStyle=1;align=center;" value="UC02 Đăng nhập hệ thống&#xa;(JWT / OAuth2 Google)" vertex="1">
+          <mxGeometry height="70" width="240" x="680" y="140" as="geometry" />
+        </mxCell>
+
+        <mxCell id="uc03" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC03 Đăng xuất" vertex="1">
+          <mxGeometry height="55" width="180" x="210" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="uc05" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC05 Đổi mật khẩu" vertex="1">
+          <mxGeometry height="55" width="180" x="440" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="uc06" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC06 Cập nhật hồ sơ cá nhân" vertex="1">
+          <mxGeometry height="55" width="190" x="210" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="uc08" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC08 Xem thông báo hệ thống" vertex="1">
+          <mxGeometry height="55" width="190" x="440" y="340" as="geometry" />
+        </mxCell>
+
+
+        <!-- ==================== SUBSYSTEM CARD B: DISCOVERY & ENROLLMENT ==================== -->
+        <mxCell id="card-course-disc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#D6D6D6;verticalAlign=top;fontSize=13;fontStyle=1;align=center;" value="" vertex="1">
+          <mxGeometry height="430" width="560" x="1000" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="uc09" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC09 Tìm kiếm &amp; Lọc khóa học" vertex="1">
+          <mxGeometry height="55" width="200" x="1020" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="uc10" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC10 Xem chi tiết khóa học" vertex="1">
+          <mxGeometry height="55" width="200" x="1240" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="uc11" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC11 Học thử bài Preview" vertex="1">
+          <mxGeometry height="55" width="190" x="1020" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="uc12" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC12 Đăng ký khóa miễn phí" vertex="1">
+          <mxGeometry height="55" width="200" x="1240" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="uc13" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC13 Mua khóa học trả phí" vertex="1">
+          <mxGeometry height="55" width="190" x="1020" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="uc14" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC14 Thanh toán qua cổng" vertex="1">
+          <mxGeometry height="55" width="190" x="1240" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="uc15" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC15 Xem lịch sử giao dịch" vertex="1">
+          <mxGeometry height="55" width="190" x="1020" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="uc07" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC07 Yêu cầu nâng cấp Giảng viên" vertex="1">
+          <mxGeometry height="55" width="200" x="1240" y="420" as="geometry" />
+        </mxCell>
+
+
+        <!-- ==================== SUBSYSTEM CARD F: ADMIN OPERATIONS ==================== -->
+        <mxCell id="card-admin" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#D6D6D6;verticalAlign=top;fontSize=13;fontStyle=1;align=center;" value="" vertex="1">
+          <mxGeometry height="430" width="580" x="1600" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="uc40" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC40 Quản lý người dùng &amp; Phân quyền" vertex="1">
+          <mxGeometry height="55" width="240" x="1620" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="uc41" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC41 Duyệt nâng cấp Giảng viên" vertex="1">
+          <mxGeometry height="55" width="230" x="1890" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="uc42" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC42 Kiểm duyệt khóa học" vertex="1">
+          <mxGeometry height="55" width="210" x="1620" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="uc43" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC43 Quản lý danh mục môn học" vertex="1">
+          <mxGeometry height="55" width="230" x="1890" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="uc44" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC44 Kiểm duyệt đánh giá &amp; Bình luận" vertex="1">
+          <mxGeometry height="55" width="240" x="1620" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="uc48" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC48 Đối soát giao dịch thanh toán" vertex="1">
+          <mxGeometry height="55" width="210" x="1890" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="uc45" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC45 Giám sát Redis AI Queue" vertex="1">
+          <mxGeometry height="55" width="240" x="1620" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="uc46" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC46 Giám sát tài nguyên máy chủ" vertex="1">
+          <mxGeometry height="55" width="230" x="1890" y="420" as="geometry" />
+        </mxCell>
+
+
+        <!-- ==================== SUBSYSTEM CARD C: LEARNING & AI DUBBING ==================== -->
+        <mxCell id="card-learning" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#D6D6D6;verticalAlign=top;fontSize=13;fontStyle=1;align=center;" value="" vertex="1">
+          <mxGeometry height="430" width="1050" x="190" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="uc16" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC16 Xem bài giảng Dual Player&#xa;(Muted Video + Audio MP3)" vertex="1">
+          <mxGeometry height="65" width="230" x="210" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="uc17" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC17 Chọn ngôn ngữ lồng tiếng" vertex="1">
+          <mxGeometry height="55" width="210" x="470" y="615" as="geometry" />
+        </mxCell>
+        <mxCell id="uc18" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC18 Yêu cầu lồng tiếng AI" vertex="1">
+          <mxGeometry height="55" width="200" x="710" y="615" as="geometry" />
+        </mxCell>
+        <mxCell id="uc19" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC19 Thực thi pipeline lồng tiếng&#xa;(STT -&amp;gt; LLM -&amp;gt; TTS)" vertex="1">
+          <mxGeometry height="60" width="230" x="950" y="615" as="geometry" />
+        </mxCell>
+        <mxCell id="uc20" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC20 Theo dõi tiến độ thời gian thực&#xa;(WebSockets)" vertex="1">
+          <mxGeometry height="60" width="230" x="710" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="uc21" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC21 Ghi nhận tiến độ học tập" vertex="1">
+          <mxGeometry height="55" width="220" x="210" y="715" as="geometry" />
+        </mxCell>
+        <mxCell id="uc22" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC22 Xem báo cáo tiến độ cá nhân" vertex="1">
+          <mxGeometry height="55" width="220" x="460" y="715" as="geometry" />
+        </mxCell>
+        <mxCell id="uc23" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC23 Đánh giá &amp; Bình luận khóa học" vertex="1">
+          <mxGeometry height="55" width="230" x="210" y="810" as="geometry" />
+        </mxCell>
+
+
+        <!-- ==================== SUBSYSTEM CARD D: AI MATERIALS & SOCRATIC TUTOR ==================== -->
+        <mxCell id="card-ai-mat" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#D6D6D6;verticalAlign=top;fontSize=13;fontStyle=1;align=center;" value="" vertex="1">
+          <mxGeometry height="430" width="900" x="1280" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="uc24" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC24 Tạo học liệu theo yêu cầu" vertex="1">
+          <mxGeometry height="55" width="220" x="1300" y="615" as="geometry" />
+        </mxCell>
+        <mxCell id="uc25" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC25 Thực thi sinh học liệu&#xa;(Creator Agent)" vertex="1">
+          <mxGeometry height="60" width="220" x="1560" y="615" as="geometry" />
+        </mxCell>
+        <mxCell id="uc30" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC30 Hỏi đáp Trợ lý Socratic AI Tutor&#xa;(Trích dẫn mốc t)" vertex="1">
+          <mxGeometry height="65" width="240" x="1810" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="uc26" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC26 Quản lý phiên bản học liệu" vertex="1">
+          <mxGeometry height="55" width="220" x="1430" y="715" as="geometry" />
+        </mxCell>
+        <mxCell id="uc27" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC27 Xem Sơ đồ tư duy (Mindmap)" vertex="1">
+          <mxGeometry height="55" width="240" x="1300" y="810" as="geometry" />
+        </mxCell>
+        <mxCell id="uc28" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC28 Ôn tập Thẻ ghi nhớ (Flashcards)" vertex="1">
+          <mxGeometry height="55" width="230" x="1560" y="810" as="geometry" />
+        </mxCell>
+        <mxCell id="uc29" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC29 Làm bài kiểm tra Quiz" vertex="1">
+          <mxGeometry height="55" width="210" x="1810" y="810" as="geometry" />
+        </mxCell>
+
+
+        <!-- ==================== SUBSYSTEM CARD E: INSTRUCTOR MANAGEMENT ==================== -->
+        <mxCell id="card-instructor" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#D6D6D6;verticalAlign=top;fontSize=13;fontStyle=1;align=center;" value="" vertex="1">
+          <mxGeometry height="420" width="1990" x="190" y="1030" as="geometry" />
+        </mxCell>
+        <mxCell id="uc31" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC31 Khởi tạo &amp; Quản lý khóa học" vertex="1">
+          <mxGeometry height="55" width="230" x="210" y="1070" as="geometry" />
+        </mxCell>
+        <mxCell id="uc32" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC32 Quản lý chương mục" vertex="1">
+          <mxGeometry height="55" width="200" x="460" y="1070" as="geometry" />
+        </mxCell>
+        <mxCell id="uc33" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC33 Quản lý bài học &amp; Preview" vertex="1">
+          <mxGeometry height="55" width="220" x="680" y="1070" as="geometry" />
+        </mxCell>
+        <mxCell id="uc34" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC34 Nạp video bài giảng&#xa;(MP4 / YouTube)" vertex="1">
+          <mxGeometry height="60" width="220" x="920" y="1070" as="geometry" />
+        </mxCell>
+        <mxCell id="uc35" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC35 Upload tài liệu đính kèm&#xa;(PDF / Slide)" vertex="1">
+          <mxGeometry height="60" width="220" x="1160" y="1070" as="geometry" />
+        </mxCell>
+        <mxCell id="uc36" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC36 Gửi khóa học đi kiểm duyệt" vertex="1">
+          <mxGeometry height="55" width="230" x="1400" y="1070" as="geometry" />
+        </mxCell>
+        <mxCell id="uc37" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC37 Khởi tạo lồng tiếng trước" vertex="1">
+          <mxGeometry height="55" width="220" x="1650" y="1070" as="geometry" />
+        </mxCell>
+        <mxCell id="uc38" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC38 Thống kê khóa học &amp; Doanh thu" vertex="1">
+          <mxGeometry height="55" width="230" x="210" y="1170" as="geometry" />
+        </mxCell>
+        <mxCell id="uc39" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;align=center;" value="UC39 Quản lý học viên &amp; Tiến độ" vertex="1">
+          <mxGeometry height="55" width="220" x="460" y="1170" as="geometry" />
+        </mxCell>
+
+
+        <!-- ==================== SUBSYSTEM CARD LOGIN INCLUDES ==================== -->
+        <!-- Subsystem Card B ── <<include>> ──> Login (UC02) -->
+        <mxCell id="e-inc-card-b-login" edge="1" parent="1" source="card-course-disc" target="uc02" style="endArrow=open;dashed=1;html=1;endSize=8;strokeColor=#444444;strokeWidth=1.5;labelBackgroundColor=#FFFFFF;fontSize=11;fontColor=#333333;align=center;verticalAlign=middle;exitX=0;exitY=0.3;entryX=1;entryY=0.3;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Subsystem Card C ── <<include>> ──> Login (UC02) -->
+        <mxCell id="e-inc-card-c-login" edge="1" parent="1" source="card-learning" target="uc02" style="endArrow=open;dashed=1;html=1;endSize=8;strokeColor=#444444;strokeWidth=1.5;labelBackgroundColor=#FFFFFF;fontSize=11;fontColor=#333333;align=center;verticalAlign=middle;exitX=0.5;exitY=0;entryX=0.2;entryY=1;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Subsystem Card D ── <<include>> ──> Login (UC02) -->
+        <mxCell id="e-inc-card-d-login" edge="1" parent="1" source="card-ai-mat" target="uc02" style="endArrow=open;dashed=1;html=1;endSize=8;strokeColor=#444444;strokeWidth=1.5;labelBackgroundColor=#FFFFFF;fontSize=11;fontColor=#333333;align=center;verticalAlign=middle;exitX=0.2;exitY=0;entryX=0.8;entryY=1;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Subsystem Card E ── <<include>> ──> Login (UC02) -->
+        <mxCell id="e-inc-card-e-login" edge="1" parent="1" source="card-instructor" target="uc02" style="endArrow=open;dashed=1;html=1;endSize=8;strokeColor=#444444;strokeWidth=1.5;labelBackgroundColor=#FFFFFF;fontSize=11;fontColor=#333333;align=center;verticalAlign=middle;edgeStyle=orthogonalEdgeStyle;exitX=0.3;exitY=0;entryX=0.5;entryY=1;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Subsystem Card F ── <<include>> ──> Login (UC02) -->
+        <mxCell id="e-inc-card-f-login" edge="1" parent="1" source="card-admin" target="uc02" style="endArrow=open;dashed=1;html=1;endSize=8;strokeColor=#444444;strokeWidth=1.5;labelBackgroundColor=#FFFFFF;fontSize=11;fontColor=#333333;align=center;verticalAlign=middle;edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+
+        <!-- ==================== ACTORS ==================== -->
+        <!-- Primary Left Actors -->
+        <mxCell id="actor-guest" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;labelBackgroundColor=none;verticalAlign=top;html=1;outlineConnect=0;fontSize=12;fontStyle=1;" value="Khách vãng lai&#xa;(Guest)" vertex="1">
+          <mxGeometry height="80" width="40" x="50" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-auth" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;labelBackgroundColor=none;verticalAlign=top;html=1;outlineConnect=0;fontSize=12;fontStyle=1;" value="Người dùng&#xa;đã xác thực" vertex="1">
+          <mxGeometry height="80" width="40" x="50" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-student" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;labelBackgroundColor=none;verticalAlign=top;html=1;outlineConnect=0;fontSize=12;fontStyle=1;" value="Học viên&#xa;(Student)" vertex="1">
+          <mxGeometry height="80" width="40" x="50" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-instructor" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;labelBackgroundColor=none;verticalAlign=top;html=1;outlineConnect=0;fontSize=12;fontStyle=1;" value="Giảng viên&#xa;(Instructor)" vertex="1">
+          <mxGeometry height="80" width="40" x="50" y="1090" as="geometry" />
+        </mxCell>
+
+        <!-- Secondary Right Actor -->
+        <mxCell id="actor-admin" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;labelBackgroundColor=none;verticalAlign=top;html=1;outlineConnect=0;fontSize=12;fontStyle=1;" value="Quản trị viên&#xa;(Admin)" vertex="1">
+          <mxGeometry height="80" width="40" x="2250" y="160" as="geometry" />
+        </mxCell>
+
+        <!-- External Systems (Right Side) -->
+        <mxCell id="ext-oauth" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontSize=11;fontStyle=1;align=center;" value="Google OAuth2 Provider" vertex="1">
+          <mxGeometry height="50" width="160" x="2230" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="ext-gateway" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontSize=11;fontStyle=1;align=center;" value="Cổng thanh toán&#xa;(MoMo/ZaloPay/VNPay)" vertex="1">
+          <mxGeometry height="55" width="160" x="2230" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="ext-stt" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontSize=11;fontStyle=1;align=center;" value="Dịch vụ STT&#xa;(WhisperX)" vertex="1">
+          <mxGeometry height="50" width="160" x="2230" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="ext-llm" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontSize=11;fontStyle=1;align=center;" value="Dịch vụ LLM&#xa;(Gemini 1.5 Flash)" vertex="1">
+          <mxGeometry height="50" width="160" x="2230" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="ext-tts" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontSize=11;fontStyle=1;align=center;" value="Dịch vụ TTS&#xa;(Edge-TTS)" vertex="1">
+          <mxGeometry height="50" width="160" x="2230" y="730" as="geometry" />
+        </mxCell>
+        <mxCell id="ext-cdn" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontSize=11;fontStyle=1;align=center;" value="YouTube / Cloud Storage&#xa;(Backblaze B2 &amp; CDN)" vertex="1">
+          <mxGeometry height="55" width="160" x="2230" y="1080" as="geometry" />
+        </mxCell>
+
+
+        <!-- ==================== ACTOR INHERITANCE ==================== -->
+        <!-- Student ──▷ Auth -->
+        <mxCell id="gen-stu-auth" edge="1" parent="1" source="actor-student" target="actor-auth" style="endArrow=block;endSize=10;endFill=0;html=1;strokeColor=#000000;strokeWidth=1.5;exitX=0.5;exitY=0;entryX=0.5;entryY=1;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Instructor ──▷ Auth -->
+        <mxCell id="gen-inst-auth" edge="1" parent="1" source="actor-instructor" target="actor-auth" style="endArrow=block;endSize=10;endFill=0;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=0;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Admin ──▷ Auth -->
+        <mxCell id="gen-adm-auth" edge="1" parent="1" source="actor-admin" target="actor-auth" style="endArrow=block;endSize=10;endFill=0;html=1;strokeColor=#000000;strokeWidth=1.5;edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;entryX=1;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+
+        <!-- ==================== ACTOR CONNECTIONS ==================== -->
+        <!-- GUEST (GREEN #107C41) -->
+        <mxCell id="e-g-uc01" edge="1" parent="1" source="actor-guest" target="uc01" style="endArrow=none;html=1;strokeColor=#107C41;strokeWidth=2;exitX=1;exitY=0.3;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-g-uc02" edge="1" parent="1" source="actor-guest" target="uc02" style="endArrow=none;html=1;strokeColor=#107C41;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-g-uc04" edge="1" parent="1" source="actor-guest" target="uc04" style="endArrow=none;html=1;strokeColor=#107C41;strokeWidth=2;exitX=1;exitY=0.4;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-g-uc09" edge="1" parent="1" source="actor-guest" target="uc09" style="endArrow=none;html=1;strokeColor=#107C41;strokeWidth=2;exitX=1;exitY=0.2;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-g-uc10" edge="1" parent="1" source="actor-guest" target="uc10" style="endArrow=none;html=1;strokeColor=#107C41;strokeWidth=2;exitX=1;exitY=0.1;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- AUTH USER (BLUE #0A59A7) -->
+        <mxCell id="e-a-uc03" edge="1" parent="1" source="actor-auth" target="uc03" style="endArrow=none;html=1;strokeColor=#0A59A7;strokeWidth=2;exitX=1;exitY=0.3;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-a-uc05" edge="1" parent="1" source="actor-auth" target="uc05" style="endArrow=none;html=1;strokeColor=#0A59A7;strokeWidth=2;exitX=1;exitY=0.4;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-a-uc06" edge="1" parent="1" source="actor-auth" target="uc06" style="endArrow=none;html=1;strokeColor=#0A59A7;strokeWidth=2;exitX=1;exitY=0.6;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-a-uc08" edge="1" parent="1" source="actor-auth" target="uc08" style="endArrow=none;html=1;strokeColor=#0A59A7;strokeWidth=2;exitX=1;exitY=0.7;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- STUDENT (BLUE #0A59A7) -->
+        <mxCell id="e-s-uc07" edge="1" parent="1" source="actor-student" target="uc07" style="endArrow=none;html=1;strokeColor=#0A59A7;strokeWidth=2;exitX=1;exitY=0.1;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-s-uc12" edge="1" parent="1" source="actor-student" target="uc12" style="endArrow=none;html=1;strokeColor=#0A59A7;strokeWidth=2;exitX=1;exitY=0.2;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-s-uc13" edge="1" parent="1" source="actor-student" target="uc13" style="endArrow=none;html=1;strokeColor=#0A59A7;strokeWidth=2;exitX=1;exitY=0.3;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-s-uc15" edge="1" parent="1" source="actor-student" target="uc15" style="endArrow=none;html=1;strokeColor=#0A59A7;strokeWidth=2;exitX=1;exitY=0.4;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-s-uc16" edge="1" parent="1" source="actor-student" target="uc16" style="endArrow=none;html=1;strokeColor=#0A59A7;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-s-uc22" edge="1" parent="1" source="actor-student" target="uc22" style="endArrow=none;html=1;strokeColor=#0A59A7;strokeWidth=2;exitX=1;exitY=0.6;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-s-uc23" edge="1" parent="1" source="actor-student" target="uc23" style="endArrow=none;html=1;strokeColor=#0A59A7;strokeWidth=2;exitX=1;exitY=0.7;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-s-uc24" edge="1" parent="1" source="actor-student" target="uc24" style="endArrow=none;html=1;strokeColor=#0A59A7;strokeWidth=2;exitX=1;exitY=0.8;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-s-uc26" edge="1" parent="1" source="actor-student" target="uc26" style="endArrow=none;html=1;strokeColor=#0A59A7;strokeWidth=2;exitX=1;exitY=0.85;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- INSTRUCTOR (ORANGE #D85A00) -->
+        <mxCell id="e-i-uc31" edge="1" parent="1" source="actor-instructor" target="uc31" style="endArrow=none;html=1;strokeColor=#D85A00;strokeWidth=2;exitX=1;exitY=0.2;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-i-uc32" edge="1" parent="1" source="actor-instructor" target="uc32" style="endArrow=none;html=1;strokeColor=#D85A00;strokeWidth=2;exitX=1;exitY=0.3;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-i-uc33" edge="1" parent="1" source="actor-instructor" target="uc33" style="endArrow=none;html=1;strokeColor=#D85A00;strokeWidth=2;exitX=1;exitY=0.4;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-i-uc34" edge="1" parent="1" source="actor-instructor" target="uc34" style="endArrow=none;html=1;strokeColor=#D85A00;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-i-uc35" edge="1" parent="1" source="actor-instructor" target="uc35" style="endArrow=none;html=1;strokeColor=#D85A00;strokeWidth=2;exitX=1;exitY=0.6;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-i-uc36" edge="1" parent="1" source="actor-instructor" target="uc36" style="endArrow=none;html=1;strokeColor=#D85A00;strokeWidth=2;exitX=1;exitY=0.7;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-i-uc37" edge="1" parent="1" source="actor-instructor" target="uc37" style="endArrow=none;html=1;strokeColor=#D85A00;strokeWidth=2;exitX=1;exitY=0.8;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-i-uc38" edge="1" parent="1" source="actor-instructor" target="uc38" style="endArrow=none;html=1;strokeColor=#D85A00;strokeWidth=2;exitX=1;exitY=0.85;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-i-uc39" edge="1" parent="1" source="actor-instructor" target="uc39" style="endArrow=none;html=1;strokeColor=#D85A00;strokeWidth=2;exitX=1;exitY=0.9;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ADMIN (RED #C0392B) -->
+        <mxCell id="e-adm-uc40" edge="1" parent="1" source="actor-admin" target="uc40" style="endArrow=none;html=1;strokeColor=#C0392B;strokeWidth=2;exitX=0;exitY=0.2;entryX=1;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adm-uc41" edge="1" parent="1" source="actor-admin" target="uc41" style="endArrow=none;html=1;strokeColor=#C0392B;strokeWidth=2;exitX=0;exitY=0.3;entryX=1;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adm-uc42" edge="1" parent="1" source="actor-admin" target="uc42" style="endArrow=none;html=1;strokeColor=#C0392B;strokeWidth=2;exitX=0;exitY=0.4;entryX=1;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adm-uc43" edge="1" parent="1" source="actor-admin" target="uc43" style="endArrow=none;html=1;strokeColor=#C0392B;strokeWidth=2;exitX=0;exitY=0.5;entryX=1;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adm-uc44" edge="1" parent="1" source="actor-admin" target="uc44" style="endArrow=none;html=1;strokeColor=#C0392B;strokeWidth=2;exitX=0;exitY=0.6;entryX=1;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adm-uc45" edge="1" parent="1" source="actor-admin" target="uc45" style="endArrow=none;html=1;strokeColor=#C0392B;strokeWidth=2;exitX=0;exitY=0.7;entryX=1;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adm-uc46" edge="1" parent="1" source="actor-admin" target="uc46" style="endArrow=none;html=1;strokeColor=#C0392B;strokeWidth=2;exitX=0;exitY=0.8;entryX=1;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adm-uc47" edge="1" parent="1" source="actor-admin" target="uc47" style="endArrow=none;html=1;strokeColor=#C0392B;strokeWidth=2;exitX=0;exitY=0.85;entryX=1;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adm-uc48" edge="1" parent="1" source="actor-admin" target="uc48" style="endArrow=none;html=1;strokeColor=#C0392B;strokeWidth=2;exitX=0;exitY=0.9;entryX=1;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- EXTERNAL SYSTEMS (PURPLE #9673A6) -->
+        <mxCell id="e-ext-oauth" edge="1" parent="1" source="uc02" target="ext-oauth" style="endArrow=open;dashed=1;html=1;strokeColor=#9673A6;strokeWidth=1.5;labelBackgroundColor=#FFFFFF;fontSize=11;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-ext-gateway" edge="1" parent="1" source="uc14" target="ext-gateway" style="endArrow=none;html=1;strokeColor=#9673A6;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-ext-stt" edge="1" parent="1" source="uc19" target="ext-stt" style="endArrow=none;html=1;strokeColor=#9673A6;strokeWidth=2;exitX=1;exitY=0.3;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-ext-llm19" edge="1" parent="1" source="uc19" target="ext-llm" style="endArrow=none;html=1;strokeColor=#9673A6;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.3;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-ext-llm25" edge="1" parent="1" source="uc25" target="ext-llm" style="endArrow=none;html=1;strokeColor=#9673A6;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-ext-llm30" edge="1" parent="1" source="uc30" target="ext-llm" style="endArrow=none;html=1;strokeColor=#9673A6;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.8;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-ext-tts" edge="1" parent="1" source="uc19" target="ext-tts" style="endArrow=none;html=1;strokeColor=#9673A6;strokeWidth=2;exitX=1;exitY=0.7;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-ext-cdn16" edge="1" parent="1" source="uc16" target="ext-cdn" style="endArrow=none;html=1;strokeColor=#9673A6;strokeWidth=2;exitX=1;exitY=0.8;entryX=0;entryY=0.2;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-ext-cdn34" edge="1" parent="1" source="uc34" target="ext-cdn" style="endArrow=none;html=1;strokeColor=#9673A6;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-ext-cdn35" edge="1" parent="1" source="uc35" target="ext-cdn" style="endArrow=none;html=1;strokeColor=#9673A6;strokeWidth=2;exitX=1;exitY=0.5;entryX=0;entryY=0.8;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+
+        <!-- ==================== USE CASE RELATIONSHIPS (INCLUDES & EXTENDS) ==================== -->
+        <!-- UC13 <<include>> UC14 -->
+        <mxCell id="e-inc-13-14" edge="1" parent="1" source="uc13" target="uc14" style="endArrow=open;dashed=1;html=1;endSize=8;strokeColor=#444444;labelBackgroundColor=#FFFFFF;fontSize=11;fontColor=#333333;align=center;verticalAlign=middle;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- UC16 <<include>> UC17 -->
+        <mxCell id="e-inc-16-17" edge="1" parent="1" source="uc16" target="uc17" style="endArrow=open;dashed=1;html=1;endSize=8;strokeColor=#444444;labelBackgroundColor=#FFFFFF;fontSize=11;fontColor=#333333;align=center;verticalAlign=middle;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- UC16 <<include>> UC21 -->
+        <mxCell id="e-inc-16-21" edge="1" parent="1" source="uc16" target="uc21" style="endArrow=open;dashed=1;html=1;endSize=8;strokeColor=#444444;labelBackgroundColor=#FFFFFF;fontSize=11;fontColor=#333333;align=center;verticalAlign=middle;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- UC18 <<extend>> UC17 -->
+        <mxCell id="e-ext-18-17" edge="1" parent="1" source="uc18" target="uc17" style="endArrow=open;dashed=1;html=1;endSize=8;strokeColor=#444444;labelBackgroundColor=#FFFFFF;fontSize=11;fontColor=#333333;align=center;verticalAlign=middle;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- UC18 <<include>> UC19 -->
+        <mxCell id="e-inc-18-19" edge="1" parent="1" source="uc18" target="uc19" style="endArrow=open;dashed=1;html=1;endSize=8;strokeColor=#444444;labelBackgroundColor=#FFFFFF;fontSize=11;fontColor=#333333;align=center;verticalAlign=middle;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- UC20 <<extend>> UC18 -->
+        <mxCell id="e-ext-20-18" edge="1" parent="1" source="uc20" target="uc18" style="endArrow=open;dashed=1;html=1;endSize=8;strokeColor=#444444;labelBackgroundColor=#FFFFFF;fontSize=11;fontColor=#333333;align=center;verticalAlign=middle;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- UC30 <<extend>> UC16 -->
+        <mxCell id="e-ext-30-16" edge="1" parent="1" source="uc30" target="uc16" style="endArrow=open;dashed=1;html=1;endSize=8;strokeColor=#444444;labelBackgroundColor=#FFFFFF;fontSize=11;fontColor=#333333;align=center;verticalAlign=middle;exitX=0;exitY=0.5;entryX=1;entryY=0.2;" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- UC24 <<include>> UC25 -->
+        <mxCell id="e-inc-24-25" edge="1" parent="1" source="uc24" target="uc25" style="endArrow=open;dashed=1;html=1;endSize=8;strokeColor=#444444;labelBackgroundColor=#FFFFFF;fontSize=11;fontColor=#333333;align=center;verticalAlign=middle;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- UC27 <<include>> UC26 -->
+        <mxCell id="e-inc-27-26" edge="1" parent="1" source="uc27" target="uc26" style="endArrow=open;dashed=1;html=1;endSize=8;strokeColor=#444444;labelBackgroundColor=#FFFFFF;fontSize=11;fontColor=#333333;align=center;verticalAlign=middle;exitX=0.5;exitY=0;entryX=0.2;entryY=1;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- UC28 <<include>> UC26 -->
+        <mxCell id="e-inc-28-26" edge="1" parent="1" source="uc28" target="uc26" style="endArrow=open;dashed=1;html=1;endSize=8;strokeColor=#444444;labelBackgroundColor=#FFFFFF;fontSize=11;fontColor=#333333;align=center;verticalAlign=middle;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- UC29 <<include>> UC26 -->
+        <mxCell id="e-inc-29-26" edge="1" parent="1" source="uc29" target="uc26" style="endArrow=open;dashed=1;html=1;endSize=8;strokeColor=#444444;labelBackgroundColor=#FFFFFF;fontSize=11;fontColor=#333333;align=center;verticalAlign=middle;exitX=0.5;exitY=0;entryX=0.8;entryY=1;" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+
+        <!-- Title -->
+        <mxCell id="title" parent="1" style="text;html=1;align=center;fontSize=22;fontStyle=1;fontColor=#333333;" value="AI-Powered LMS Complete Master Use Case Diagram (Unified Master Diagram - 48 Use Cases)" vertex="1">
+          <mxGeometry height="45" width="1200" x="600" y="2210" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

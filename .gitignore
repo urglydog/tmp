@@ -27,3 +27,16 @@ supabase/.temp/
 .env
 .env.*
 *.env
+
+# Bỏ qua thư mục ref theo yêu cầu
+ref/
+
+# Python & Backend
+venv/
+__pycache__/
+*.pyc
+
+# Next.js & Frontend
+.next/
+out/
+

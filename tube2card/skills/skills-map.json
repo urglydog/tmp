@@ -1,0 +1,145 @@
+{
+  "$comment": "Source of truth for skill routing. Edit this file, then re-run sync script. Never edit generated output by hand.",
+
+  "scanRoots": [
+    "Skills/CodeSkills/01_Workflow/skills",
+    "Skills/CodeSkills/02_UI_UX_Design/taste-skill/skills",
+    "Skills/CodeSkills/02_UI_UX_Design/ui-ux-pro-max-skill/.claude/skills",
+    "Skills/CodeSkills/03_EngineeringQuality/skills",
+    "Skills/CodeSkills/05_SmartSpender/skills"
+  ],
+
+  "stackRules": [
+    "Skills/CodeSkills/04_TechStack/rules/smart-spender/ss-flutter-frontend.md",
+    "Skills/CodeSkills/04_TechStack/rules/smart-spender/ss-supabase-backend.md"
+  ],
+
+  "doNotRead": [
+    "Skills/CodeSkills/04_TechStack/rules/community/rules/**",
+    "Skills/CodeSkills/02_UI_UX_Design/ui-ux-pro-max-skill/cli/assets/skills/**",
+    "Skills/CodeSkills/01_Workflow/README.md",
+    "Skills/CodeSkills/02_UI_UX_Design/taste-skill/README.md",
+    "Skills/CodeSkills/02_UI_UX_Design/ui-ux-pro-max-skill/README.md",
+    "Skills/CodeSkills/03_EngineeringQuality/README.md",
+    "Skills/CodeSkills/**/docs/**",
+    "Skills/CodeSkills/**/tests/**",
+    "Skills/CodeSkills/**/scripts/**"
+  ],
+
+  "pointerSkills": [
+    {
+      "name": "ss-flutter-rules",
+      "description": "Smart Spender Flutter frontend standard. Feature-first folder structure, flutter_bloc state management, go_router navigation, i18n via ARB files, Supabase SDK integration, snake_case files, PascalCase classes.",
+      "source": "Skills/CodeSkills/04_TechStack/rules/smart-spender/ss-flutter-frontend.md"
+    },
+    {
+      "name": "ss-supabase-rules",
+      "description": "Smart Spender Supabase backend standard. PostgreSQL with RLS, Edge Functions in Deno/TS, Auth triggers, pg_cron for recurring, NUMERIC(15,2) for money, UUID PKs, soft-delete pattern.",
+      "source": "Skills/CodeSkills/04_TechStack/rules/smart-spender/ss-supabase-backend.md"
+    },
+
+    {
+      "name": "ss-usecase-map",
+      "description": "Điểm vào bắt buộc cho mọi task tính năng Smart Spender. Ánh xạ 24 use case sang actor, thực thể và quy tắc nghiệp vụ. Dùng khi nhận yêu cầu thêm hoặc sửa chức năng, thiết kế API, hoặc cần biết một chức năng chạm vào dữ liệu và ràng buộc nào.",
+      "source": "Skills/CodeSkills/05_SmartSpender/skills/ss-usecase-map/SKILL.md"
+    },
+    {
+      "name": "ss-domain-model",
+      "description": "Mô hình miền Smart Spender: 6 entities PostgreSQL, schema chi tiết, quan hệ, index, naming convention. Dùng khi viết migration SQL, tạo Dart model, hoặc sửa schema.",
+      "source": "Skills/CodeSkills/05_SmartSpender/skills/ss-domain-model/SKILL.md"
+    },
+    {
+      "name": "ss-business-rules",
+      "description": "30 quy tắc nghiệp vụ Smart Spender theo 8 nhóm mã BR, kèm bảng Khi/Thì/Ngoại lệ. Dùng khi hiện thực logic, validate đầu vào, hoặc kiểm tra hành vi có đúng đặc tả.",
+      "source": "Skills/CodeSkills/05_SmartSpender/skills/ss-business-rules/SKILL.md"
+    },
+    {
+      "name": "ss-ai-parsing",
+      "description": "Pipeline Voice/Text → STT → Edge Function → Gemini Parse → Confirmation UI → Save. Bao gồm system prompt, JSON schema, fuzzy matching, error handling. Dùng cho UC-11, UC-12, debug AI parse.",
+      "source": "Skills/CodeSkills/05_SmartSpender/skills/ss-ai-parsing/SKILL.md"
+    },
+    {
+      "name": "ss-recurring-budget",
+      "description": "Giao dịch định kỳ tự động (pg_cron) + hệ thống ngân sách theo danh mục/tháng. Stored procedures, budget monitoring 80%/100% alerts. Dùng cho UC-18 đến UC-23.",
+      "source": "Skills/CodeSkills/05_SmartSpender/skills/ss-recurring-budget/SKILL.md"
+    },
+
+    {
+      "name": "ss-brainstorming",
+      "description": "Turn a vague idea into an agreed design before any code is written. Use at the start of every new feature, component, or behaviour change.",
+      "source": "Skills/CodeSkills/01_Workflow/skills/brainstorming/SKILL.md",
+      "next": "ss-writing-plans"
+    },
+    {
+      "name": "ss-writing-plans",
+      "description": "Break an agreed spec into an ordered implementation plan of 2-5 minute tasks with exact file paths. Use after brainstorming and before touching code.",
+      "source": "Skills/CodeSkills/01_Workflow/skills/writing-plans/SKILL.md",
+      "next": "ss-tdd"
+    },
+    {
+      "name": "ss-tdd",
+      "description": "Run the RED to GREEN to REFACTOR cycle. Write the failing test first, then the implementation. Project default for all production code.",
+      "source": "Skills/CodeSkills/01_Workflow/skills/test-driven-development/SKILL.md",
+      "next": "ss-verify"
+    },
+    {
+      "name": "ss-debug",
+      "description": "Find the root cause before proposing a fix. Use on any bug, failing test, build break, or unexpected behaviour.",
+      "source": "Skills/CodeSkills/01_Workflow/skills/systematic-debugging/SKILL.md"
+    },
+    {
+      "name": "ss-verify",
+      "description": "Prove the work is actually done. Use before claiming a task is complete: run the real build and the real tests.",
+      "source": "Skills/CodeSkills/01_Workflow/skills/verification-before-completion/SKILL.md"
+    },
+
+    {
+      "name": "ss-ui-ux-pro-max",
+      "description": "Searchable design database for product UI: styles, colour palettes, font pairings, UX guidelines. Use for dashboards, forms, and multi-step product screens.",
+      "source": "Skills/CodeSkills/02_UI_UX_Design/ui-ux-pro-max-skill/.claude/skills/ui-ux-pro-max/SKILL.md",
+      "also": "Skills/CodeSkills/04_TechStack/rules/smart-spender/ss-flutter-frontend.md"
+    },
+    {
+      "name": "ss-design-system",
+      "description": "Define or extend the shared design system: tokens, spacing scale, component variants, theming. Use when the change affects more than one screen.",
+      "source": "Skills/CodeSkills/02_UI_UX_Design/ui-ux-pro-max-skill/.claude/skills/design-system/SKILL.md"
+    },
+    {
+      "name": "ss-design-taste",
+      "description": "Anti-slop visual direction so the app does not look templated. Use for onboarding screens, splash, and key UI moments.",
+      "source": "Skills/CodeSkills/02_UI_UX_Design/taste-skill/skills/taste-skill/SKILL.md"
+    },
+
+    {
+      "name": "ss-security",
+      "description": "Harden code against vulnerabilities. Use when handling user input, authentication, sessions, file uploads, or third-party integrations.",
+      "source": "Skills/CodeSkills/03_EngineeringQuality/skills/security-and-hardening/SKILL.md"
+    },
+    {
+      "name": "ss-performance",
+      "description": "Optimise performance across frontend, backend, queries, and databases. Use when something is measurably slow or adding caching.",
+      "source": "Skills/CodeSkills/03_EngineeringQuality/skills/performance-optimization/SKILL.md"
+    },
+    {
+      "name": "ss-api-design",
+      "description": "Design stable Edge Function endpoints, DTOs, and consistent error handling. Use before adding or changing any endpoint.",
+      "source": "Skills/CodeSkills/03_EngineeringQuality/skills/api-and-interface-design/SKILL.md"
+    },
+    {
+      "name": "ss-frontend-ui",
+      "description": "Build production-quality accessible responsive UI: component structure, state, loading and error states, keyboard support.",
+      "source": "Skills/CodeSkills/03_EngineeringQuality/skills/frontend-ui-engineering/SKILL.md",
+      "also": "Skills/CodeSkills/04_TechStack/rules/smart-spender/ss-flutter-frontend.md"
+    },
+    {
+      "name": "ss-code-review",
+      "description": "Multi-axis code review covering correctness, security, performance, and maintainability. Use before merging any change.",
+      "source": "Skills/CodeSkills/03_EngineeringQuality/skills/code-review-and-quality/SKILL.md"
+    },
+    {
+      "name": "ss-incremental",
+      "description": "Ship a change in small verified slices. Use whenever the work touches more than one file or cannot be verified in a single step.",
+      "source": "Skills/CodeSkills/03_EngineeringQuality/skills/incremental-implementation/SKILL.md"
+    }
+  ]
+}
