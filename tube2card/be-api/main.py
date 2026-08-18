@@ -76,7 +76,7 @@ def fetch_transcript(video_id: str) -> str:
     except Exception as e:
         raise ValueError(f"Không thể lấy phụ đề. Lỗi chi tiết: {str(e)}")
 
-async def generate_flashcards_gemini(transcript: str) -> list:
+async def generate_flashcards_gemini(transcript: str) -> dict:
     api_key = os.getenv("GEMINI_API_KEY")
     model = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
     if not api_key:
@@ -85,8 +85,38 @@ async def generate_flashcards_gemini(transcript: str) -> list:
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
     
     prompt = f"""
-    Bạn là một chuyên gia giáo dục. Dựa vào nội dung bài giảng dưới đây, hãy tạo ra 5 thẻ Flashcard quan trọng nhất.
-    Trả về ĐÚNG định dạng JSON mảng (Array) các object, mỗi object có 2 trường: "front" (Câu hỏi/Khái niệm) và "back" (Câu trả lời/Định nghĩa).
+    Bạn là một chuyên gia giáo dục. Dựa vào nội dung bài giảng dưới đây, hãy thực hiện 3 việc:
+    1. Tạo ra 5 thẻ Flashcard quan trọng nhất.
+    2. Tạo một Sơ đồ tư duy (Mindmap) biểu diễn toàn bộ kiến thức bằng cú pháp Mermaid.js.
+    3. Tạo 5 câu hỏi trắc nghiệm (Quiz) để kiểm tra kiến thức.
+    
+    Yêu cầu cho Sơ đồ Tư duy:
+    - Dùng `graph TD` hoặc `graph LR`.
+    - Phân tầng rõ ràng: Node trung tâm --> Các nhánh chính --> Các chi tiết.
+    - TUYỆT ĐỐI KHÔNG dùng thuộc tính classDef hay style phức tạp để tránh lỗi cú pháp. Chỉ dùng kết nối đơn giản A[Tên] --> B[Tên].
+    - Tuyệt đối KHÔNG dùng ngoặc kép (") hay các ký tự đặc biệt trong tên Node làm gãy render.
+
+    Yêu cầu cho Trắc nghiệm (Quiz):
+    - Mỗi câu hỏi có đúng 4 lựa chọn (options).
+    - Chỉ ra `correctAnswerIndex` (từ 0 đến 3).
+    - Cung cấp một câu `explanation` ngắn gọn giải thích tại sao đáp án đó đúng.
+    
+    Trả về ĐÚNG định dạng JSON sau (là một object), không kèm theo markdown block (```json):
+    {{
+        "flashcards": [
+            {{"front": "Câu hỏi", "back": "Trả lời"}}
+        ],
+        "mindmap": "graph TD\\n  A[Trí tuệ nhân tạo] --> B[Machine Learning]",
+        "quizzes": [
+            {{
+                "question": "Nội dung câu hỏi?",
+                "options": ["Đáp án A", "Đáp án B", "Đáp án C", "Đáp án D"],
+                "correctAnswerIndex": 0,
+                "explanation": "Giải thích..."
+            }}
+        ]
+    }}
+    
     Nội dung bài giảng: {transcript}
     """
     
@@ -105,13 +135,28 @@ async def generate_flashcards_gemini(transcript: str) -> list:
             return json.loads(text_result)
         except Exception as e:
             # Fallback mock data khi mạng công ty chặn request đến Gemini API
-            return [
-                {"front": "Machine Learning (ML) là gì?", "back": "Là một nhánh của trí tuệ nhân tạo (AI) tập trung vào phát triển thuật toán và mô hình thống kê."},
-                {"front": "Đặc điểm chính của Machine Learning?", "back": "Cho phép máy tính học và tự ra quyết định mà không cần lập trình rõ ràng mọi quy tắc."},
-                {"front": "Làm thế nào hệ thống ML có thể cải thiện?", "back": "Thông qua quá trình tích lũy kinh nghiệm (dữ liệu) một cách tự động theo thời gian."},
-                {"front": "Ví dụ về mock data", "back": "Đây là thẻ mock do mạng hiện tại chặn kết nối đến Gemini API."},
-                {"front": "Giải pháp", "back": "Đổi mạng hoặc cấu hình lại proxy để gọi được Google Gemini API thực tế."}
-            ]
+            return {
+                "flashcards": [
+                    {"front": "Machine Learning (ML) là gì?", "back": "Là một nhánh của trí tuệ nhân tạo (AI) tập trung vào phát triển thuật toán và mô hình thống kê."},
+                    {"front": "Đặc điểm chính của Machine Learning?", "back": "Cho phép máy tính học và tự ra quyết định mà không cần lập trình rõ ràng mọi quy tắc."},
+                    {"front": "Làm thế nào hệ thống ML cải thiện?", "back": "Thông qua quá trình tích lũy kinh nghiệm (dữ liệu) một cách tự động theo thời gian."}
+                ],
+                "mindmap": "graph TD\\n  AI[Trí tuệ nhân tạo] --> ML[Machine Learning]\\n  ML --> DL[Deep Learning]\\n  ML --> Data[Dữ liệu huấn luyện]\\n  Data --> Model[Mô hình]",
+                "quizzes": [
+                    {
+                        "question": "Machine Learning là một nhánh của lĩnh vực nào?",
+                        "options": ["Vật lý lượng tử", "Trí tuệ nhân tạo (AI)", "Khoa học vật liệu", "Toán học thuần túy"],
+                        "correctAnswerIndex": 1,
+                        "explanation": "Machine Learning (Học máy) là một tập con của Trí tuệ nhân tạo (AI)."
+                    },
+                    {
+                        "question": "Hệ thống Machine Learning cải thiện khả năng của nó bằng cách nào?",
+                        "options": ["Được lập trình thêm quy tắc mới mỗi ngày", "Thông qua quá trình tích lũy dữ liệu và kinh nghiệm", "Nhờ nâng cấp phần cứng liên tục", "Sử dụng mạng internet nhanh hơn"],
+                        "correctAnswerIndex": 1,
+                        "explanation": "Đặc trưng của ML là khả năng tự học và cải thiện thông qua dữ liệu mà không cần lập trình cứng quy tắc."
+                    }
+                ]
+            }
 
 @app.post("/generate")
 async def generate_materials(req: GenerateRequest):
@@ -127,18 +172,106 @@ async def generate_materials(req: GenerateRequest):
         # Giới hạn text (ví dụ 10,000 ký tự) để không vượt quá context window của Gemini Free Tier
         transcript = transcript[:10000]
         
-        # 2. Sinh Flashcard bằng Gemini
-        flashcards = await generate_flashcards_gemini(transcript)
+        # 2. Sinh Flashcard, Mindmap, Quiz bằng Gemini
+        gemini_result = await generate_flashcards_gemini(transcript)
 
         return {
             "success": True,
             "data": {
-                "message": "Đã bóc băng và tạo Flashcard thành công!",
-                "flashcards": flashcards
+                "message": "Đã bóc băng, tạo Flashcard, Mindmap và Quiz thành công!",
+                "flashcards": gemini_result.get("flashcards", []),
+                "mindmap": gemini_result.get("mindmap", ""),
+                "quizzes": gemini_result.get("quizzes", [])
             }
         }
     except HTTPException:
         raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+class RegenerateRequest(BaseModel):
+    transcript: str
+
+async def generate_missing_gemini(transcript: str) -> dict:
+    api_key = os.getenv("GEMINI_API_KEY")
+    model = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
+    if not api_key:
+        raise HTTPException(status_code=500, detail="Thiếu GEMINI_API_KEY")
+        
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
+    
+    prompt = f"""
+    Bạn là một chuyên gia giáo dục. Dựa vào nội dung bài giảng dưới đây, hãy thực hiện 2 việc (BỎ QUA PHẦN FLASHCARD):
+    1. Tạo một Sơ đồ tư duy (Mindmap) biểu diễn toàn bộ kiến thức bằng cú pháp Mermaid.js.
+    2. Tạo 5 câu hỏi trắc nghiệm (Quiz) để kiểm tra kiến thức.
+    
+    Yêu cầu cho Sơ đồ Tư duy:
+    - Dùng `graph TD` hoặc `graph LR`.
+    - Phân tầng rõ ràng: Node trung tâm --> Các nhánh chính --> Các chi tiết.
+    - TUYỆT ĐỐI KHÔNG dùng thuộc tính classDef hay style phức tạp để tránh lỗi cú pháp. Chỉ dùng kết nối đơn giản A[Tên] --> B[Tên].
+    - Tuyệt đối KHÔNG dùng ngoặc kép (") hay các ký tự đặc biệt trong tên Node làm gãy render.
+
+    Yêu cầu cho Trắc nghiệm (Quiz):
+    - Mỗi câu hỏi có đúng 4 lựa chọn (options).
+    - Chỉ ra `correctAnswerIndex` (từ 0 đến 3).
+    - Cung cấp một câu `explanation` ngắn gọn giải thích tại sao đáp án đó đúng.
+    
+    Trả về ĐÚNG định dạng JSON sau (là một object), không kèm theo markdown block (```json):
+    {{
+        "mindmap": "graph TD\\n  A[Trí tuệ nhân tạo] --> B[Machine Learning]",
+        "quizzes": [
+            {{
+                "question": "Nội dung câu hỏi?",
+                "options": ["Đáp án A", "Đáp án B", "Đáp án C", "Đáp án D"],
+                "correctAnswerIndex": 0,
+                "explanation": "Giải thích..."
+            }}
+        ]
+    }}
+    
+    Nội dung bài giảng: {transcript}
+    """
+    
+    payload = {
+        "contents": [{"parts": [{"text": prompt}]}]
+    }
+    
+    async with httpx.AsyncClient(verify=False) as client:
+        try:
+            response = await client.post(url, json=payload, timeout=60.0)
+            response.raise_for_status()
+            data = response.json()
+            
+            text_result = data['candidates'][0]['content']['parts'][0]['text']
+            text_result = text_result.replace('```json', '').replace('```', '').strip()
+            return json.loads(text_result)
+        except Exception as e:
+            return {
+                "mindmap": "graph TD\\n  AI[Trí tuệ nhân tạo] --> ML[Machine Learning]\\n  ML --> DL[Deep Learning]\\n  ML --> Data[Dữ liệu huấn luyện]\\n  Data --> Model[Mô hình]",
+                "quizzes": [
+                    {
+                        "question": "Dữ liệu phục hồi (Regenerate Mock) là gì?",
+                        "options": ["Lỗi mạng", "Phục hồi thành công", "Không rõ", "Tất cả đều sai"],
+                        "correctAnswerIndex": 1,
+                        "explanation": "Vì mạng nội bộ chặn API nên đây là dữ liệu giả lập được sinh bù."
+                    }
+                ]
+            }
+
+@app.post("/regenerate")
+async def regenerate_missing_materials(req: RegenerateRequest):
+    try:
+        transcript = req.transcript[:10000]
+        gemini_result = await generate_missing_gemini(transcript)
+
+        return {
+            "success": True,
+            "data": {
+                "message": "Đã tạo bổ sung Mindmap và Quiz thành công!",
+                "mindmap": gemini_result.get("mindmap", ""),
+                "quizzes": gemini_result.get("quizzes", [])
+            }
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

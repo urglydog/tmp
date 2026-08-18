@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   try {
-    const { url, flashcards, token, userId } = await req.json();
+    const { url, flashcards, mindmap, quizzes, token, userId } = await req.json();
     
     if (!token || !userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -41,13 +41,37 @@ export async function POST(req: Request) {
 
     if (deckErr) throw new Error(`Lỗi tạo Deck: ${deckErr.message}`);
 
-    // 3. Lưu Cards
+    // 3. Lưu Cards (bao gồm flashcard, mindmap và quiz)
     const cardsToInsert = flashcards.map((card: any) => ({
       deck_id: deckData.id,
       type: 'flashcard',
       front: card.front,
       back: card.back
     }));
+    
+    if (mindmap) {
+      cardsToInsert.push({
+        deck_id: deckData.id,
+        type: 'mindmap',
+        front: mindmap,
+        back: ''
+      });
+    }
+
+    if (quizzes && Array.isArray(quizzes)) {
+      quizzes.forEach((quiz: any) => {
+        cardsToInsert.push({
+          deck_id: deckData.id,
+          type: 'quiz',
+          front: quiz.question,
+          back: JSON.stringify({
+            options: quiz.options,
+            correctAnswerIndex: quiz.correctAnswerIndex,
+            explanation: quiz.explanation
+          })
+        });
+      });
+    }
     
     const { error: cardsErr } = await supabase.from('cards').insert(cardsToInsert);
     if (cardsErr) throw new Error(`Lỗi tạo Cards: ${cardsErr.message}`);

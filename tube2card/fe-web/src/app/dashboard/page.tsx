@@ -54,16 +54,22 @@ export default function Dashboard() {
       <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[100px] pointer-events-none" />
       
       <div className="max-w-6xl mx-auto z-10 relative">
-        <div className="flex items-center gap-4 mb-12">
-          <Link href="/" className="p-3 bg-zinc-900 hover:bg-zinc-800 rounded-xl transition-colors border border-zinc-800">
-            <ArrowLeft className="w-5 h-5" />
-          </Link>
-          <div>
-            <h1 className="text-4xl font-bold flex items-center gap-3">
-              <Library className="text-blue-400" /> Thư viện của tôi
-            </h1>
-            <p className="text-zinc-400 mt-2">Quản lý và ôn tập các bộ Flashcard bạn đã tạo.</p>
+        <div className="flex items-center justify-between mb-12">
+          <div className="flex items-center gap-4">
+            <Link href="/" className="p-3 bg-zinc-900 hover:bg-zinc-800 rounded-xl transition-colors border border-zinc-800">
+              <ArrowLeft className="w-5 h-5" />
+            </Link>
+            <div>
+              <h1 className="text-4xl font-bold flex items-center gap-3">
+                <Library className="text-blue-400" /> Thư viện của tôi
+              </h1>
+              <p className="text-zinc-400 mt-2">Quản lý và ôn tập các bộ Flashcard bạn đã tạo.</p>
+            </div>
           </div>
+          
+          <Link href="/profile" className="hidden md:flex w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 hover:from-blue-400 hover:to-purple-500 rounded-full items-center justify-center font-bold text-white shadow-lg transition-all border-2 border-transparent hover:border-purple-400 shrink-0" title="Cài đặt Tài khoản">
+            {user?.user_metadata?.display_name?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase()}
+          </Link>
         </div>
 
         {decks.length === 0 ? (

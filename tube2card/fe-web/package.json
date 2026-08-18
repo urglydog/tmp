@@ -12,6 +12,7 @@
     "@supabase/ssr": "^0.12.4",
     "@supabase/supabase-js": "^2.112.3",
     "lucide-react": "^1.31.0",
+    "mermaid": "^11.16.1",
     "next": "14.2.35",
     "papaparse": "^5.6.0",
     "react": "^18",

@@ -4,15 +4,29 @@ import { RotateCw } from 'lucide-react';
 interface FlashcardProps {
   front: string;
   back: string;
+  onFlip?: (flipped: boolean) => void;
+  resetFlipped?: boolean;
 }
 
-export default function Flashcard({ front, back }: FlashcardProps) {
+export default function Flashcard({ front, back, onFlip, resetFlipped }: FlashcardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
+
+  React.useEffect(() => {
+    if (resetFlipped) {
+      setIsFlipped(false);
+    }
+  }, [resetFlipped, front]); // Reset khi đổi câu hoặc có cờ reset
+
+  const handleFlip = () => {
+    const newState = !isFlipped;
+    setIsFlipped(newState);
+    if (onFlip) onFlip(newState);
+  };
 
   return (
     <div 
       className="group h-64 w-full perspective-1000 cursor-pointer"
-      onClick={() => setIsFlipped(!isFlipped)}
+      onClick={handleFlip}
     >
       <div 
         className={`relative h-full w-full rounded-2xl shadow-xl transition-all duration-500 [transform-style:preserve-3d] ${isFlipped ? '[transform:rotateY(180deg)]' : ''}`}
