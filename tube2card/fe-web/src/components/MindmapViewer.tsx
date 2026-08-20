@@ -19,7 +19,10 @@ export default function MindmapViewer({ chart }: MindmapViewerProps) {
 
   // Cố gắng tự động phát hiện layout ban đầu từ chuỗi chart do AI sinh ra
   useEffect(() => {
-    const match = chart.match(/^(graph|flowchart)\s+(TD|LR|BT|RL)/i);
+    // Thay thế ký tự \n (dạng chuỗi) thành dấu xuống dòng thực sự nếu có
+    const formattedChart = chart.replace(/\\n/g, '\n');
+    const cleanChart = formattedChart.replace(/```mermaid\n?/gi, '').replace(/```\n?/g, '').trim();
+    const match = cleanChart.match(/^(graph|flowchart)\s+(TD|LR|BT|RL)/i);
     if (match && match[2]) {
       setLayout(match[2].toUpperCase() as any);
     }
@@ -39,8 +42,14 @@ export default function MindmapViewer({ chart }: MindmapViewerProps) {
         setLoading(true);
         setError(null);
         
+        // Thay thế ký tự \n (dạng chuỗi) thành dấu xuống dòng thực sự nếu có
+        const formattedChart = chart.replace(/\\n/g, '\n');
+        
+        // Loại bỏ markdown codeblock nếu AI trả về kèm theo
+        const cleanChart = formattedChart.replace(/```mermaid\n?/gi, '').replace(/```\n?/g, '').trim();
+        
         // Thay đổi hướng sơ đồ dựa trên state `layout`
-        const modifiedChart = chart.replace(/^(graph|flowchart)\s+(TD|LR|BT|RL)/i, `$1 ${layout}`);
+        const modifiedChart = cleanChart.replace(/^(graph|flowchart)\s+(TD|LR|BT|RL)/i, `$1 ${layout}`);
         
         // Tạo một ID duy nhất cho biểu đồ
         const id = `mermaid-${Math.random().toString(36).substr(2, 9)}`;

@@ -19,11 +19,17 @@ CREATE TABLE public.documents (
 -- 2. Bảng Decks (Bộ học liệu / Tập hợp Flashcards)
 CREATE TABLE public.decks (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    document_id UUID REFERENCES public.documents(id) ON DELETE CASCADE,
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
     title TEXT NOT NULL,
     description TEXT,
     mindmap_json JSONB,
+    source_url TEXT,
+    source_type TEXT CHECK (source_type IN ('youtube', 'vimeo', 'pdf', 'audio', 'text', 'image')),
+    summary TEXT,
+    transcript TEXT,
+    is_public BOOLEAN DEFAULT false,
+    tags TEXT[],
+    cloned_from UUID REFERENCES public.decks(id),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { Loader2, ArrowLeft, ChevronLeft, ChevronRight, CheckCircle2, Network, Layers, ListChecks, Settings, Edit2, Trash2, RefreshCw, Download, Pencil } from 'lucide-react';
+import { Loader2, ArrowLeft, ChevronLeft, ChevronRight, CheckCircle2, Network, Layers, ListChecks, Settings, Edit2, Trash2, RefreshCw, Download, Pencil, Globe, X, FileText, Sparkles, Send } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Flashcard from '@/components/Flashcard';
@@ -20,7 +20,7 @@ export default function StudyMode({ params }: { params: { id: string } }) {
   const [isRegenerating, setIsRegenerating] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<'left' | 'right' | null>(null);
-  const [activeTab, setActiveTab] = useState<'flashcards' | 'mindmap' | 'quiz' | 'manage'>('flashcards');
+  const [activeTab, setActiveTab] = useState<'overview' | 'flashcards' | 'mindmap' | 'quiz' | 'manage'>('overview');
   const [allFlashcards, setAllFlashcards] = useState<any[]>([]);
   const [studyMode, setStudyMode] = useState<'srs' | 'cram'>('srs');
   const [isCurrentCardFlipped, setIsCurrentCardFlipped] = useState(false);
@@ -34,6 +34,20 @@ export default function StudyMode({ params }: { params: { id: string } }) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const titleInputRef = useRef<HTMLInputElement>(null);
+  // Add New Card states
+  const [isAddingCard, setIsAddingCard] = useState(false);
+  const [newCardFront, setNewCardFront] = useState('');
+  const [newCardBack, setNewCardBack] = useState('');
+
+  // Publish Modal states
+  const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
+  const [publishDescription, setPublishDescription] = useState('');
+  const [publishTags, setPublishTags] = useState('');
+  const [isPublishing, setIsPublishing] = useState(false);
+
+  // Custom Quiz states
+  const [customPrompt, setCustomPrompt] = useState('');
+  const [isGeneratingCustom, setIsGeneratingCustom] = useState(false);
 
   const router = useRouter();
   const supabase = createClient();
@@ -61,6 +75,8 @@ export default function StudyMode({ params }: { params: { id: string } }) {
 
     setDeck(deckData);
     setNewTitle(deckData.title);
+    if (deckData.description) setPublishDescription(deckData.description);
+    if (deckData.tags) setPublishTags(deckData.tags.join(', '));
 
     const { data: cardsData } = await supabase
       .from('cards')
@@ -191,7 +207,10 @@ export default function StudyMode({ params }: { params: { id: string } }) {
         })
       });
       
-      if (!saveRes.ok) throw new Error('Lỗi lưu Database');
+      if (!saveRes.ok) {
+        const errData = await saveRes.json();
+        throw new Error(errData.error || 'Lỗi lưu Database');
+      }
       
       await fetchDeckAndCards();
       setActiveTab('mindmap');
@@ -199,6 +218,50 @@ export default function StudyMode({ params }: { params: { id: string } }) {
       alert('Có lỗi xảy ra khi tạo bổ sung: ' + String(err));
     } finally {
       setIsRegenerating(false);
+    }
+  };
+
+  const handleGenerateCustomQuiz = async () => {
+    if (!customPrompt.trim()) return;
+    try {
+      setIsGeneratingCustom(true);
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      const res = await fetch('http://localhost:8085/regenerate-custom', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+           transcript: deck.transcript || deck.documents?.transcript || 'Mock transcript',
+           prompt: customPrompt
+        })
+      });
+      
+      if (!res.ok) throw new Error('Lỗi gọi AI Backend');
+      const data = await res.json();
+      
+      const saveRes = await fetch('/api/save-missing', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          deckId: deck.id,
+          quizzes: data.data.quizzes,
+          token: session?.access_token
+        })
+      });
+      
+      if (!saveRes.ok) {
+        const errData = await saveRes.json();
+        throw new Error(errData.error || 'Lỗi lưu Database');
+      }
+      
+      setCustomPrompt('');
+      await fetchDeckAndCards();
+      setActiveTab('quiz');
+      alert('Đã tạo thêm trắc nghiệm thành công!');
+    } catch (err) {
+      alert('Có lỗi xảy ra khi tạo trắc nghiệm: ' + String(err));
+    } finally {
+      setIsGeneratingCustom(false);
     }
   };
 
@@ -253,6 +316,30 @@ export default function StudyMode({ params }: { params: { id: string } }) {
     setIsEditingTitle(false);
   };
 
+  const handleAddCard = async () => {
+    if (!newCardFront.trim() || !newCardBack.trim()) {
+      alert('Vui lòng nhập đủ câu hỏi và câu trả lời!');
+      return;
+    }
+    const { error } = await supabase.from('cards').insert({
+      deck_id: deck.id,
+      front: newCardFront,
+      back: newCardBack,
+      type: 'flashcard',
+      interval: 0,
+      ease_factor: 2.5
+    });
+
+    if (!error) {
+      setIsAddingCard(false);
+      setNewCardFront('');
+      setNewCardBack('');
+      await fetchDeckAndCards();
+    } else {
+      alert('Lỗi thêm thẻ: ' + error.message);
+    }
+  };
+
   const handleDownloadCSV = () => {
     if (allFlashcards.length === 0) {
       alert("Không có flashcard nào để xuất!");
@@ -269,6 +356,41 @@ export default function StudyMode({ params }: { params: { id: string } }) {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+  };
+
+  const handlePublishDeck = async () => {
+    setIsPublishing(true);
+    const tagArray = publishTags.split(',').map(t => t.trim()).filter(Boolean);
+    
+    const { error } = await supabase
+      .from('decks')
+      .update({
+        is_public: true,
+        description: publishDescription,
+        tags: tagArray
+      })
+      .eq('id', deck.id);
+
+    if (!error) {
+      setDeck({ ...deck, is_public: true, description: publishDescription, tags: tagArray });
+      setIsPublishModalOpen(false);
+      alert('Đã chia sẻ bộ thẻ công khai thành công!');
+    } else {
+      alert('Lỗi khi chia sẻ: ' + error.message);
+    }
+    setIsPublishing(false);
+  };
+
+  const handleUnpublishDeck = async () => {
+    const { error } = await supabase
+      .from('decks')
+      .update({ is_public: false })
+      .eq('id', deck.id);
+
+    if (!error) {
+      setDeck({ ...deck, is_public: false });
+      alert('Đã gỡ bộ thẻ khỏi chế độ công khai.');
+    }
   };
 
   // Logic Thuật toán SRS
@@ -327,13 +449,13 @@ export default function StudyMode({ params }: { params: { id: string } }) {
       
       <div className="max-w-4xl mx-auto w-full z-10 flex-1 flex flex-col">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-8 gap-6 lg:gap-4">
-          <div className="flex items-center gap-4 w-full lg:w-auto">
-            <Link href="/dashboard" className="flex items-center gap-2 p-3 bg-zinc-900 hover:bg-zinc-800 rounded-xl transition-colors border border-zinc-800 text-zinc-400 hover:text-white shrink-0">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-8 gap-6 flex-wrap">
+          <div className="flex items-start gap-4 flex-1 min-w-[300px]">
+            <Link href="/dashboard" className="flex items-center gap-2 p-3 bg-zinc-900 hover:bg-zinc-800 rounded-xl transition-colors border border-zinc-800 text-zinc-400 hover:text-white shrink-0 mt-1 lg:mt-0">
               <ArrowLeft className="w-5 h-5" /> <span className="hidden md:inline">Thư viện</span>
             </Link>
             
-            <div className="flex items-center gap-2 group cursor-pointer flex-1">
+            <div className="flex-1 w-full">
               {isEditingTitle ? (
                 <input 
                   ref={titleInputRef}
@@ -347,22 +469,28 @@ export default function StudyMode({ params }: { params: { id: string } }) {
                       setIsEditingTitle(false);
                     }
                   }}
-                  className="bg-zinc-900 border border-purple-500 rounded-lg px-3 py-1 text-xl md:text-2xl font-bold text-white outline-none w-full max-w-[200px] md:max-w-[300px]"
+                  className="bg-zinc-900 border border-purple-500 rounded-lg px-3 py-1 text-xl md:text-2xl font-bold text-white outline-none w-full"
                 />
               ) : (
                 <div 
                   onClick={() => setIsEditingTitle(true)}
-                  className="flex items-center gap-2 max-w-[200px] md:max-w-[400px]"
+                  className="flex items-start gap-2 cursor-pointer group w-full pt-1 lg:pt-0"
                 >
-                  <h1 className="text-xl md:text-2xl font-bold truncate group-hover:text-purple-400 transition-colors" title={deck?.title}>{deck?.title}</h1>
-                  <Pencil className="w-4 h-4 text-zinc-500 group-hover:text-purple-400 transition-colors opacity-0 group-hover:opacity-100 shrink-0" />
+                  <h1 className="text-xl md:text-2xl font-bold leading-tight group-hover:text-purple-400 transition-colors" title={deck?.title}>{deck?.title}</h1>
+                  <Pencil className="w-4 h-4 text-zinc-500 group-hover:text-purple-400 transition-colors opacity-0 group-hover:opacity-100 shrink-0 mt-1.5" />
                 </div>
               )}
             </div>
           </div>
           
-          <div className="flex flex-col-reverse sm:flex-row items-start sm:items-center gap-4 w-full lg:w-auto">
+          <div className="flex flex-wrap items-center gap-4 w-full lg:w-auto shrink-0">
             <div className="flex bg-zinc-800/50 p-1 rounded-lg border border-zinc-700/50 w-full sm:w-auto overflow-x-auto hide-scrollbar">
+              <button 
+                onClick={() => setActiveTab('overview')}
+                className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-all ${activeTab === 'overview' ? 'bg-purple-600 text-white shadow-lg' : 'text-zinc-400 hover:text-white'}`}
+              >
+                <FileText className="w-4 h-4" /> <span className="hidden md:inline">Tổng quan</span>
+              </button>
               <button 
                 onClick={() => setActiveTab('flashcards')}
                 className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-all ${activeTab === 'flashcards' ? 'bg-purple-600 text-white shadow-lg' : 'text-zinc-400 hover:text-white'}`}
@@ -401,6 +529,14 @@ export default function StudyMode({ params }: { params: { id: string } }) {
               >
                 <Download className="w-4 h-4" />
               </button>
+              
+              <button 
+                onClick={() => setIsPublishModalOpen(true)}
+                title={deck?.is_public ? "Bộ thẻ đang Công khai" : "Chia sẻ Công khai"}
+                className={`flex items-center justify-center p-2 rounded-md transition-colors ${deck?.is_public ? 'text-blue-400 bg-blue-500/10' : 'text-zinc-400 hover:bg-blue-500/20 hover:text-blue-400'}`}
+              >
+                <Globe className="w-4 h-4" />
+              </button>
             </div>
 
             {/* Avatar Profile Link */}
@@ -409,6 +545,69 @@ export default function StudyMode({ params }: { params: { id: string } }) {
             </Link>
           </div>
         </div>
+
+        {/* Publish Modal */}
+        {isPublishModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+            <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl w-full max-w-md shadow-2xl animate-in fade-in zoom-in-95">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold flex items-center gap-2">
+                  <Globe className="text-blue-400" /> 
+                  {deck?.is_public ? 'Cập nhật Chia sẻ' : 'Chia sẻ Công khai'}
+                </h2>
+                <button onClick={() => setIsPublishModalOpen(false)} className="text-zinc-500 hover:text-white">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              
+              <p className="text-zinc-400 text-sm mb-6">
+                Khi công khai, bộ thẻ của bạn sẽ xuất hiện trên trang Khám phá. Mọi người có thể học hoặc lưu bản sao bộ thẻ này.
+              </p>
+
+              <div className="space-y-4 mb-6">
+                <div>
+                  <label className="block text-sm font-medium text-zinc-300 mb-1">Mô tả (Tùy chọn)</label>
+                  <textarea 
+                    value={publishDescription}
+                    onChange={(e) => setPublishDescription(e.target.value)}
+                    className="w-full bg-zinc-950 border border-zinc-700 rounded-lg p-3 text-white outline-none focus:border-blue-500 h-24 resize-none"
+                    placeholder="Bộ thẻ này nói về cái gì..."
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-zinc-300 mb-1">Thẻ / Tags (Cách nhau bằng dấu phẩy)</label>
+                  <input 
+                    type="text"
+                    value={publishTags}
+                    onChange={(e) => setPublishTags(e.target.value)}
+                    className="w-full bg-zinc-950 border border-zinc-700 rounded-lg p-3 text-white outline-none focus:border-blue-500"
+                    placeholder="Ví dụ: Lịch sử, Việt Nam, HK1"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <button 
+                  onClick={handlePublishDeck}
+                  disabled={isPublishing}
+                  className="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold text-white transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {isPublishing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Globe className="w-5 h-5" />}
+                  {deck?.is_public ? 'Cập nhật thông tin' : 'Công khai ngay'}
+                </button>
+                
+                {deck?.is_public && (
+                  <button 
+                    onClick={handleUnpublishDeck}
+                    className="w-full py-3 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-xl font-bold transition-colors"
+                  >
+                    Hủy Công khai (Chuyển về Private)
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Cảnh báo thiếu dữ liệu */}
         {isMissingContent && activeTab !== 'manage' && (
@@ -424,6 +623,50 @@ export default function StudyMode({ params }: { params: { id: string } }) {
               {isRegenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
               Tạo bổ sung bằng AI
             </button>
+          </div>
+        )}
+
+        {/* Tab Overview */}
+        {activeTab === 'overview' && (
+          <div className="flex-1 w-full flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-12">
+            <div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-6 shadow-xl">
+              <h2 className="text-xl font-bold mb-4 flex items-center gap-2"><FileText className="text-purple-400" /> Tóm tắt & Nguồn tài liệu</h2>
+              {deck?.source_url ? (
+                <div className="mb-6">
+                  <h3 className="text-sm text-zinc-500 uppercase tracking-wider font-bold mb-2">Nguồn</h3>
+                  {deck?.source_type === 'youtube' ? (
+                    <div className="aspect-video w-full max-w-2xl mx-auto rounded-xl overflow-hidden shadow-lg border border-zinc-700">
+                      <iframe 
+                        className="w-full h-full"
+                        src={`https://www.youtube.com/embed/${deck.source_url.split('v=')[1]?.split('&')[0]}`} 
+                        allowFullScreen
+                      />
+                    </div>
+                  ) : (
+                    <a href={deck.source_url} target="_blank" rel="noreferrer" className="text-blue-400 hover:underline break-all">
+                      {deck.source_url}
+                    </a>
+                  )}
+                </div>
+              ) : (
+                <div className="mb-6 text-zinc-500 italic">Không có tài liệu nguồn.</div>
+              )}
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="text-sm text-zinc-500 uppercase tracking-wider font-bold mb-2">Tóm tắt</h3>
+                  <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800/50 text-zinc-300 whitespace-pre-wrap leading-relaxed h-full">
+                    {deck?.summary || 'Đang cập nhật nội dung tóm tắt...'}
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-sm text-zinc-500 uppercase tracking-wider font-bold mb-2">Transcript / Nội dung gốc</h3>
+                  <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800/50 text-zinc-400 whitespace-pre-wrap leading-relaxed h-64 overflow-y-auto custom-scrollbar">
+                    {deck?.transcript || deck?.documents?.transcript || 'Không có bản dịch.'}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
@@ -578,20 +821,84 @@ export default function StudyMode({ params }: { params: { id: string } }) {
         )}
 
         {/* Tab Quiz */}
-        {activeTab === 'quiz' && quizzes.length > 0 && (
-          <div className="flex-1 w-full flex items-center justify-center">
-            <QuizPlayer quizzes={quizzes} deckId={deck.id} />
+        {activeTab === 'quiz' && (
+          <div className="flex-1 w-full flex flex-col gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-12">
+            
+            <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 p-6 rounded-2xl border border-purple-500/30 shadow-lg">
+              <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-purple-400" /> Trợ lý AI: Tạo Trắc nghiệm Tùy chỉnh
+              </h3>
+              <p className="text-zinc-400 text-sm mb-4">
+                Yêu cầu AI tạo thêm câu hỏi dựa trên nội dung bài học. Ví dụ: "Tạo cho tôi 5 câu khó về vòng đời component".
+              </p>
+              <div className="flex gap-2">
+                <input 
+                  type="text"
+                  value={customPrompt}
+                  onChange={(e) => setCustomPrompt(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleGenerateCustomQuiz();
+                  }}
+                  disabled={isGeneratingCustom}
+                  placeholder="Nhập yêu cầu của bạn..."
+                  className="flex-1 bg-zinc-950 border border-zinc-700 rounded-xl px-4 py-3 text-white focus:border-purple-500 outline-none disabled:opacity-50"
+                />
+                <button 
+                  onClick={handleGenerateCustomQuiz}
+                  disabled={isGeneratingCustom || !customPrompt.trim()}
+                  className="px-6 bg-purple-600 hover:bg-purple-500 disabled:bg-purple-800 disabled:opacity-50 text-white rounded-xl font-bold flex items-center justify-center transition-colors"
+                >
+                  {isGeneratingCustom ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
+                </button>
+              </div>
+            </div>
+
+            {quizzes.length > 0 ? (
+              <div className="w-full flex items-center justify-center">
+                <QuizPlayer quizzes={quizzes} deckId={deck.id} />
+              </div>
+            ) : (
+              <p className="text-center text-zinc-500 mt-8">Chưa có câu hỏi trắc nghiệm nào. Hãy yêu cầu AI tạo thêm!</p>
+            )}
           </div>
         )}
 
         {/* Tab Manage (CRUD) */}
         {activeTab === 'manage' && (
-          <div className="flex-1 w-full flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="flex-1 w-full flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-12">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold">Danh sách Flashcard</h2>
+              <button 
+                onClick={() => setIsAddingCard(!isAddingCard)}
+                className="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+              >
+                {isAddingCard ? 'Hủy' : '+ Thêm thẻ mới'}
+              </button>
             </div>
             
             <div className="space-y-4">
+              {isAddingCard && (
+                <div className="bg-purple-900/20 border-2 border-purple-500/50 p-4 rounded-xl flex flex-col gap-3 mb-4 animate-in fade-in slide-in-from-top-2">
+                  <h3 className="font-bold text-purple-300">Tạo Flashcard mới</h3>
+                  <input 
+                    value={newCardFront} 
+                    onChange={e => setNewCardFront(e.target.value)} 
+                    className="w-full bg-zinc-950 border border-zinc-700 rounded-lg p-3 focus:border-purple-500 outline-none text-white"
+                    placeholder="Mặt trước (Câu hỏi)"
+                  />
+                  <textarea 
+                    value={newCardBack} 
+                    onChange={e => setNewCardBack(e.target.value)} 
+                    className="w-full bg-zinc-950 border border-zinc-700 rounded-lg p-3 focus:border-purple-500 outline-none min-h-[80px] text-white"
+                    placeholder="Mặt sau (Câu trả lời)"
+                  />
+                  <div className="flex justify-end mt-2">
+                    <button onClick={handleAddCard} className="px-6 py-2 bg-purple-600 hover:bg-purple-500 rounded-lg font-medium text-white transition-colors">
+                      Thêm thẻ
+                    </button>
+                  </div>
+                </div>
+              )}
               {allFlashcards.map(card => (
                 <div key={card.id} className="bg-zinc-900/80 p-4 rounded-xl border border-zinc-800 flex flex-col md:flex-row gap-4 justify-between items-start">
                   {editingCardId === card.id ? (

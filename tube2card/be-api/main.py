@@ -86,7 +86,7 @@ async def generate_flashcards_gemini(transcript: str) -> dict:
     
     prompt = f"""
     Bạn là một chuyên gia giáo dục. Dựa vào nội dung bài giảng dưới đây, hãy thực hiện 3 việc:
-    1. Tạo ra 5 thẻ Flashcard quan trọng nhất.
+    1. Tạo ra TẤT CẢ các thẻ Flashcard cần thiết (không giới hạn số lượng) để bao quát TOÀN BỘ kiến thức quan trọng. Đừng bỏ sót bất kỳ khái niệm nào.
     2. Tạo một Sơ đồ tư duy (Mindmap) biểu diễn toàn bộ kiến thức bằng cú pháp Mermaid.js.
     3. Tạo 5 câu hỏi trắc nghiệm (Quiz) để kiểm tra kiến thức.
     
@@ -134,6 +134,7 @@ async def generate_flashcards_gemini(transcript: str) -> dict:
             text_result = text_result.replace('```json', '').replace('```', '').strip()
             return json.loads(text_result)
         except Exception as e:
+            print(f"[Gemini API Error - generate_flashcards]: {e}")
             # Fallback mock data khi mạng công ty chặn request đến Gemini API
             return {
                 "flashcards": [
@@ -169,19 +170,31 @@ async def generate_materials(req: GenerateRequest):
             # Mạng hiện tại chặn Python Script. Chuyển sang dùng Mock Transcript để test UI...
             transcript = "Machine learning is a subfield of artificial intelligence that focuses on the development of algorithms and statistical models. It allows computers to learn and make decisions without being explicitly programmed. This allows systems to improve from experience automatically."
         
-        # Giới hạn text (ví dụ 10,000 ký tự) để không vượt quá context window của Gemini Free Tier
-        transcript = transcript[:10000]
+        # 2. Cơ chế Chunking: Chia nhỏ transcript nếu quá dài (vd mỗi chunk 8000 ký tự)
+        CHUNK_SIZE = 8000
+        chunks = [transcript[i:i + CHUNK_SIZE] for i in range(0, len(transcript), CHUNK_SIZE)]
         
-        # 2. Sinh Flashcard, Mindmap, Quiz bằng Gemini
-        gemini_result = await generate_flashcards_gemini(transcript)
+        all_flashcards = []
+        mindmap_str = ""
+        all_quizzes = []
+
+        # Xử lý từng chunk
+        for idx, chunk in enumerate(chunks):
+            gemini_result = await generate_flashcards_gemini(chunk)
+            all_flashcards.extend(gemini_result.get("flashcards", []))
+            all_quizzes.extend(gemini_result.get("quizzes", []))
+            
+            # Chỉ lấy mindmap từ chunk đầu tiên để tránh xung đột
+            if idx == 0:
+                mindmap_str = gemini_result.get("mindmap", "")
 
         return {
             "success": True,
             "data": {
-                "message": "Đã bóc băng, tạo Flashcard, Mindmap và Quiz thành công!",
-                "flashcards": gemini_result.get("flashcards", []),
-                "mindmap": gemini_result.get("mindmap", ""),
-                "quizzes": gemini_result.get("quizzes", [])
+                "message": "Đã bóc băng, tạo Flashcard, Mindmap và Quiz thành công (Comprehensive Extraction)!",
+                "flashcards": all_flashcards,
+                "mindmap": mindmap_str,
+                "quizzes": all_quizzes
             }
         }
     except HTTPException:
@@ -246,6 +259,7 @@ async def generate_missing_gemini(transcript: str) -> dict:
             text_result = text_result.replace('```json', '').replace('```', '').strip()
             return json.loads(text_result)
         except Exception as e:
+            print(f"[Gemini API Error - generate_missing]: {e}")
             return {
                 "mindmap": "graph TD\\n  AI[Trí tuệ nhân tạo] --> ML[Machine Learning]\\n  ML --> DL[Deep Learning]\\n  ML --> Data[Dữ liệu huấn luyện]\\n  Data --> Model[Mô hình]",
                 "quizzes": [
@@ -275,6 +289,86 @@ async def regenerate_missing_materials(req: RegenerateRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+class CustomQuizRequest(BaseModel):
+    transcript: str
+    prompt: str
+
+async def generate_custom_quiz_gemini(transcript: str, user_prompt: str) -> dict:
+    api_key = os.getenv("GEMINI_API_KEY")
+    model = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
+    if not api_key:
+        raise HTTPException(status_code=500, detail="Thiếu GEMINI_API_KEY")
+        
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
+    
+    prompt = f"""
+    Bạn là một chuyên gia giáo dục. Dựa vào nội dung bài giảng và YÊU CẦU CỦA NGƯỜI DÙNG dưới đây, hãy tạo các câu hỏi trắc nghiệm (Quiz).
+    
+    YÊU CẦU CỦA NGƯỜI DÙNG: {user_prompt}
+    
+    Yêu cầu cho Trắc nghiệm (Quiz):
+    - Mỗi câu hỏi có đúng 4 lựa chọn (options).
+    - Chỉ ra `correctAnswerIndex` (từ 0 đến 3).
+    - Cung cấp một câu `explanation` ngắn gọn giải thích tại sao đáp án đó đúng.
+    
+    Trả về ĐÚNG định dạng JSON sau (là một object), không kèm theo markdown block (```json):
+    {{
+        "quizzes": [
+            {{
+                "question": "Nội dung câu hỏi?",
+                "options": ["Đáp án A", "Đáp án B", "Đáp án C", "Đáp án D"],
+                "correctAnswerIndex": 0,
+                "explanation": "Giải thích..."
+            }}
+        ]
+    }}
+    
+    Nội dung bài giảng: {transcript}
+    """
+    
+    payload = {
+        "contents": [{"parts": [{"text": prompt}]}]
+    }
+    
+    async with httpx.AsyncClient(verify=False) as client:
+        try:
+            response = await client.post(url, json=payload, timeout=60.0)
+            response.raise_for_status()
+            data = response.json()
+            
+            text_result = data['candidates'][0]['content']['parts'][0]['text']
+            text_result = text_result.replace('```json', '').replace('```', '').strip()
+            return json.loads(text_result)
+        except Exception as e:
+            print(f"[Gemini API Error - generate_custom_quiz]: {e}")
+            return {
+                "quizzes": [
+                    {
+                        "question": f"[MOCK] Câu hỏi giả lập cho yêu cầu: {user_prompt[:20]}...",
+                        "options": ["Đúng", "Sai", "Có thể", "Không biết"],
+                        "correctAnswerIndex": 0,
+                        "explanation": "Do mạng công ty chặn API, đây là dữ liệu giả lập cho Custom Quiz."
+                    }
+                ]
+            }
+
+@app.post("/regenerate-custom")
+async def regenerate_custom(req: CustomQuizRequest):
+    try:
+        # Lấy 10,000 ký tự đầu cho custom prompt (để tránh vượt quá token nếu cần)
+        transcript = req.transcript[:10000] 
+        gemini_result = await generate_custom_quiz_gemini(transcript, req.prompt)
+
+        return {
+            "success": True,
+            "data": {
+                "message": "Đã tạo custom quiz thành công!",
+                "quizzes": gemini_result.get("quizzes", [])
+            }
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8085)

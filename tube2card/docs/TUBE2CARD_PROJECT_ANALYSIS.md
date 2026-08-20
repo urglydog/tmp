@@ -74,3 +74,7 @@ tmp/tube2card/
 - **Deck:** Bộ học liệu (thuộc về 1 Document).
 - **Card:** Các thẻ học / Câu hỏi trắc nghiệm (thuộc về Deck).
 - **StudyProgress:** Bảng lưu lịch sử học tập (Ngày review tiếp theo theo thuật toán SRS).
+
+
+source venv/bin/activate
+python main.py

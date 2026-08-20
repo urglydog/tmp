@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { Loader2, Library, ChevronRight, Layers, ArrowLeft } from 'lucide-react';
+import { Loader2, Library, ChevronRight, Layers, ArrowLeft, Globe } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -67,9 +67,15 @@ export default function Dashboard() {
             </div>
           </div>
           
-          <Link href="/profile" className="hidden md:flex w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 hover:from-blue-400 hover:to-purple-500 rounded-full items-center justify-center font-bold text-white shadow-lg transition-all border-2 border-transparent hover:border-purple-400 shrink-0" title="Cài đặt Tài khoản">
-            {user?.user_metadata?.display_name?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase()}
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/discover" className="hidden md:flex items-center gap-2 px-4 py-2 bg-blue-600/10 text-blue-400 hover:bg-blue-600/20 border border-blue-500/20 rounded-xl transition-colors font-medium">
+              <Globe className="w-5 h-5" /> Khám phá Cộng đồng
+            </Link>
+            
+            <Link href="/profile" className="hidden md:flex w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 hover:from-blue-400 hover:to-purple-500 rounded-full items-center justify-center font-bold text-white shadow-lg transition-all border-2 border-transparent hover:border-purple-400 shrink-0" title="Cài đặt Tài khoản">
+              {user?.user_metadata?.display_name?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase()}
+            </Link>
+          </div>
         </div>
 
         {decks.length === 0 ? (
