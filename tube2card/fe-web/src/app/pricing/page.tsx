@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Loader2, Zap, Crown, CheckCircle2, ArrowLeft, Gem } from 'lucide-react';
 import Link from 'next/link';
 
-export default function PricingPage() {
+function PricingContent() {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<any>(null);
   const supabase = createClient();
@@ -209,5 +209,17 @@ export default function PricingPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function PricingPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex h-screen w-full items-center justify-center bg-zinc-950 text-white">
+        <Loader2 className="w-10 h-10 animate-spin text-purple-500" />
+      </div>
+    }>
+      <PricingContent />
+    </Suspense>
   );
 }
