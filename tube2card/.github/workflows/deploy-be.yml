@@ -1,0 +1,40 @@
+name: Deploy Backend to EC2
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'be-api/**'  # Chỉ kích hoạt CI/CD khi có thay đổi trong thư mục be-api
+
+jobs:
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          # Kịch bản sẽ chạy trực tiếp trên EC2
+          script: |
+            # 1. Di chuyển vào thư mục project chứa mã nguồn
+            # GIẢ ĐỊNH: Bạn clone git vào thư mục /home/ubuntu/tube2card trên máy chủ EC2
+            cd /home/ubuntu/tube2card
+            
+            # 2. Lấy mã nguồn mới nhất
+            git pull origin main
+            
+            # 3. Cập nhật thư viện Python cho Backend (nếu có)
+            cd be-api
+            source venv/bin/activate
+            pip install -r requirements.txt
+            
+            # 4. Khởi động lại ứng dụng FastAPI bằng PM2
+            pm2 restart tube2card-api
