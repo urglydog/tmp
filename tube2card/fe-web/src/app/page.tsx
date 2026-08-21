@@ -89,7 +89,10 @@ export default function Home() {
         password,
         options: {
           data: {
-            display_name: email.split('@')[0]
+            display_name: email.split('@')[0],
+            full_name: email.split('@')[0],
+            name: email.split('@')[0],
+            avatar_url: ''
           }
         }
       });
