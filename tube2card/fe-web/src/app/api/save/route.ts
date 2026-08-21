@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   try {
-    const { url, flashcards, mindmap, quizzes, token, userId } = await req.json();
+    const { url, transcript, flashcards, mindmap, quizzes, token, userId } = await req.json();
     
     if (!token || !userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
       user_id: userId,
       source_url: url,
       source_type: 'youtube',
-      transcript: 'Mock transcript used for testing'
+      transcript: transcript || 'No transcript provided'
     }).select().single();
 
     if (docErr) throw new Error(`Lỗi tạo Document: ${docErr.message}`);

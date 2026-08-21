@@ -135,29 +135,7 @@ async def generate_flashcards_gemini(transcript: str) -> dict:
             return json.loads(text_result)
         except Exception as e:
             print(f"[Gemini API Error - generate_flashcards]: {e}")
-            # Fallback mock data khi mạng công ty chặn request đến Gemini API
-            return {
-                "flashcards": [
-                    {"front": "Machine Learning (ML) là gì?", "back": "Là một nhánh của trí tuệ nhân tạo (AI) tập trung vào phát triển thuật toán và mô hình thống kê."},
-                    {"front": "Đặc điểm chính của Machine Learning?", "back": "Cho phép máy tính học và tự ra quyết định mà không cần lập trình rõ ràng mọi quy tắc."},
-                    {"front": "Làm thế nào hệ thống ML cải thiện?", "back": "Thông qua quá trình tích lũy kinh nghiệm (dữ liệu) một cách tự động theo thời gian."}
-                ],
-                "mindmap": "graph TD\\n  AI[Trí tuệ nhân tạo] --> ML[Machine Learning]\\n  ML --> DL[Deep Learning]\\n  ML --> Data[Dữ liệu huấn luyện]\\n  Data --> Model[Mô hình]",
-                "quizzes": [
-                    {
-                        "question": "Machine Learning là một nhánh của lĩnh vực nào?",
-                        "options": ["Vật lý lượng tử", "Trí tuệ nhân tạo (AI)", "Khoa học vật liệu", "Toán học thuần túy"],
-                        "correctAnswerIndex": 1,
-                        "explanation": "Machine Learning (Học máy) là một tập con của Trí tuệ nhân tạo (AI)."
-                    },
-                    {
-                        "question": "Hệ thống Machine Learning cải thiện khả năng của nó bằng cách nào?",
-                        "options": ["Được lập trình thêm quy tắc mới mỗi ngày", "Thông qua quá trình tích lũy dữ liệu và kinh nghiệm", "Nhờ nâng cấp phần cứng liên tục", "Sử dụng mạng internet nhanh hơn"],
-                        "correctAnswerIndex": 1,
-                        "explanation": "Đặc trưng của ML là khả năng tự học và cải thiện thông qua dữ liệu mà không cần lập trình cứng quy tắc."
-                    }
-                ]
-            }
+            raise HTTPException(status_code=500, detail=f"Lỗi khi gọi AI Gemini: {str(e)}")
 
 @app.post("/generate")
 async def generate_materials(req: GenerateRequest):
@@ -167,8 +145,7 @@ async def generate_materials(req: GenerateRequest):
             video_id = extract_video_id(req.url)
             transcript = fetch_transcript(video_id)
         except Exception as e:
-            # Mạng hiện tại chặn Python Script. Chuyển sang dùng Mock Transcript để test UI...
-            transcript = "Machine learning is a subfield of artificial intelligence that focuses on the development of algorithms and statistical models. It allows computers to learn and make decisions without being explicitly programmed. This allows systems to improve from experience automatically."
+            raise HTTPException(status_code=400, detail=f"Không thể bóc băng Youtube: {str(e)}")
         
         # 2. Cơ chế Chunking: Chia nhỏ transcript nếu quá dài (vd mỗi chunk 8000 ký tự)
         CHUNK_SIZE = 8000
@@ -194,7 +171,8 @@ async def generate_materials(req: GenerateRequest):
                 "message": "Đã bóc băng, tạo Flashcard, Mindmap và Quiz thành công (Comprehensive Extraction)!",
                 "flashcards": all_flashcards,
                 "mindmap": mindmap_str,
-                "quizzes": all_quizzes
+                "quizzes": all_quizzes,
+                "transcript": transcript
             }
         }
     except HTTPException:
@@ -260,17 +238,7 @@ async def generate_missing_gemini(transcript: str) -> dict:
             return json.loads(text_result)
         except Exception as e:
             print(f"[Gemini API Error - generate_missing]: {e}")
-            return {
-                "mindmap": "graph TD\\n  AI[Trí tuệ nhân tạo] --> ML[Machine Learning]\\n  ML --> DL[Deep Learning]\\n  ML --> Data[Dữ liệu huấn luyện]\\n  Data --> Model[Mô hình]",
-                "quizzes": [
-                    {
-                        "question": "Dữ liệu phục hồi (Regenerate Mock) là gì?",
-                        "options": ["Lỗi mạng", "Phục hồi thành công", "Không rõ", "Tất cả đều sai"],
-                        "correctAnswerIndex": 1,
-                        "explanation": "Vì mạng nội bộ chặn API nên đây là dữ liệu giả lập được sinh bù."
-                    }
-                ]
-            }
+            raise HTTPException(status_code=500, detail=f"Lỗi tạo bổ sung từ AI Gemini: {str(e)}")
 
 @app.post("/regenerate")
 async def regenerate_missing_materials(req: RegenerateRequest):
@@ -341,16 +309,7 @@ async def generate_custom_quiz_gemini(transcript: str, user_prompt: str) -> dict
             return json.loads(text_result)
         except Exception as e:
             print(f"[Gemini API Error - generate_custom_quiz]: {e}")
-            return {
-                "quizzes": [
-                    {
-                        "question": f"[MOCK] Câu hỏi giả lập cho yêu cầu: {user_prompt[:20]}...",
-                        "options": ["Đúng", "Sai", "Có thể", "Không biết"],
-                        "correctAnswerIndex": 0,
-                        "explanation": "Do mạng công ty chặn API, đây là dữ liệu giả lập cho Custom Quiz."
-                    }
-                ]
-            }
+            raise HTTPException(status_code=500, detail=f"Lỗi tạo custom quiz từ AI Gemini: {str(e)}")
 
 @app.post("/regenerate-custom")
 async def regenerate_custom(req: CustomQuizRequest):

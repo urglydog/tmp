@@ -187,7 +187,8 @@ export default function StudyMode({ params }: { params: { id: string } }) {
       setIsRegenerating(true);
       const { data: { session } } = await supabase.auth.getSession();
       
-      const res = await fetch('http://localhost:8085/regenerate', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8085';
+      const res = await fetch(`${apiUrl}/regenerate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ transcript: deck.documents?.transcript || 'Mock transcript' })
@@ -227,7 +228,8 @@ export default function StudyMode({ params }: { params: { id: string } }) {
       setIsGeneratingCustom(true);
       const { data: { session } } = await supabase.auth.getSession();
       
-      const res = await fetch('http://localhost:8085/regenerate-custom', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8085';
+      const res = await fetch(`${apiUrl}/regenerate-custom`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

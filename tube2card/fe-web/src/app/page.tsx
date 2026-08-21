@@ -122,7 +122,8 @@ export default function Home() {
     setFlashcards([]);
 
     try {
-      const response = await fetch('http://127.0.0.1:8085/generate', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8085';
+      const response = await fetch(`${apiUrl}/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -149,6 +150,7 @@ export default function Home() {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 url,
+                transcript: data.data.transcript,
                 flashcards: data.data.flashcards,
                 mindmap: data.data.mindmap,
                 quizzes: data.data.quizzes,
