@@ -2,8 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { Link2, Loader2, Sparkles, LogOut, Download, Library, Clock, ChevronRight } from 'lucide-react';
+import { Link2, Loader2, Sparkles, LogOut, Download, Library, Clock, ChevronRight, Gem } from 'lucide-react';
 import Flashcard from '@/components/Flashcard';
+import UserMenu from '@/components/UserMenu';
 import Papa from 'papaparse';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -24,6 +25,7 @@ export default function Home() {
   const [password, setPassword] = useState('');
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState('');
+  const [userCredits, setUserCredits] = useState<number | null>(null);
 
   const supabase = createClient();
   const router = useRouter();
@@ -34,13 +36,23 @@ export default function Home() {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user ?? null);
       setSessionToken(session?.access_token ?? null);
+      if (session?.user) {
+        const { data: creditsData } = await supabase.from('user_credits').select('credits').eq('user_id', session.user.id).maybeSingle();
+        if (creditsData) setUserCredits(creditsData.credits);
+      }
     };
     getUser();
 
     // Lắng nghe trạng thái thay đổi đăng nhập
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setUser(session?.user ?? null);
       setSessionToken(session?.access_token ?? null);
+      if (session?.user) {
+        const { data: creditsData } = await supabase.from('user_credits').select('credits').eq('user_id', session.user.id).maybeSingle();
+        if (creditsData) setUserCredits(creditsData.credits);
+      } else {
+        setUserCredits(null);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -237,26 +249,26 @@ export default function Home() {
             <div className="flex flex-col gap-6">
               <div className="flex items-center justify-between bg-zinc-800/50 p-4 rounded-xl border border-zinc-700/50">
                 <div className="flex items-center gap-3">
-                  <Link href="/profile" className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 hover:from-blue-400 hover:to-purple-500 rounded-full flex items-center justify-center font-bold text-white shadow-lg transition-all cursor-pointer border-2 border-transparent hover:border-purple-400">
-                    {user.user_metadata?.display_name?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase()}
-                  </Link>
+                  <UserMenu user={user} />
                   <div className="text-left">
                     <p className="text-sm font-medium text-zinc-200">Xin chào,</p>
-                    <Link href="/profile" className="text-xs text-purple-400 hover:text-purple-300 transition-colors">
+                    <Link href="/profile?tab=account" className="text-xs text-purple-400 hover:text-purple-300 transition-colors truncate max-w-[120px] block" title={user.user_metadata?.display_name || user.email}>
                       {user.user_metadata?.display_name || user.email?.split('@')[0]}
                     </Link>
                   </div>
                 </div>
                 
                 <div className="flex items-center gap-2">
+                  {userCredits !== null && userCredits > 0 && (
+                    <div className="hidden md:flex items-center gap-2 px-3 py-2 bg-purple-500/10 border border-purple-500/20 text-purple-400 rounded-lg font-bold text-sm">
+                      💎 {userCredits} Credits
+                    </div>
+                  )}
                   <Link href="/pricing" className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white rounded-lg transition-all text-sm font-bold shadow-lg">
-                    💎 Nâng cấp
+                    <Gem size={16} /> {userCredits !== null && userCredits > 5 ? 'Nạp thêm' : 'Nâng cấp'}
                   </Link>
                   <Link href="/dashboard" className="flex items-center gap-2 px-4 py-2 bg-purple-600/20 hover:bg-purple-600/40 text-purple-400 rounded-lg transition-colors text-sm font-medium border border-purple-500/20">
                     <Library size={16} /> Thư viện
-                  </Link>
-                  <Link href="/profile" className="p-2 hover:bg-zinc-700 rounded-lg text-zinc-400 hover:text-white transition-colors" title="Cài đặt Tài khoản">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
                   </Link>
                 </div>
               </div>

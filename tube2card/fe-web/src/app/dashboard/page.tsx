@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { Loader2, Library, ChevronRight, Layers, ArrowLeft, Globe, Home, LogOut } from 'lucide-react';
 import Link from 'next/link';
+import UserMenu from '@/components/UserMenu';
 import { useRouter } from 'next/navigation';
 
 export default function Dashboard() {
@@ -45,12 +46,7 @@ export default function Dashboard() {
     };
 
     fetchUserAndDecks();
-  }, [supabase, router]);
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.push('/');
-  };
+  }, [supabase]);
 
   if (loading) {
     return (
@@ -97,13 +93,11 @@ export default function Dashboard() {
               <Home className="w-5 h-5" />
             </Link>
 
-            <button onClick={handleLogout} className="p-2 hover:bg-zinc-800 rounded-xl text-zinc-400 hover:text-white transition-colors" title="Đăng xuất">
-              <LogOut className="w-5 h-5" />
-            </button>
-            
-            <Link href="/profile" className="hidden md:flex w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 hover:from-blue-400 hover:to-purple-500 rounded-full items-center justify-center font-bold text-white shadow-lg transition-all border-2 border-transparent hover:border-purple-400 shrink-0" title="Cài đặt Tài khoản">
-              {user?.user_metadata?.display_name?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase()}
-            </Link>
+            {user && (
+              <div className="hidden md:flex ml-2">
+                <UserMenu user={user} />
+              </div>
+            )}
           </div>
         </div>
 
