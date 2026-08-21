@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { Loader2, ArrowLeft, ChevronLeft, ChevronRight, Network, Layers, ListChecks, Download, Copy, CheckCircle2, FileText } from 'lucide-react';
+import { Loader2, ArrowLeft, ChevronLeft, ChevronRight, Network, Layers, ListChecks, Download, Copy, CheckCircle2, FileText, Home, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Flashcard from '@/components/Flashcard';
@@ -102,6 +102,11 @@ export default function PreviewMode({ params }: { params: { id: string } }) {
   useEffect(() => {
     fetchDeckAndCards();
   }, [supabase, params.id, router]);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push('/');
+  };
 
   const handleNext = () => {
     if (currentIndex < flashcards.length - 1) {
@@ -223,6 +228,12 @@ export default function PreviewMode({ params }: { params: { id: string } }) {
           </div>
           
           <div className="flex flex-wrap items-center gap-4 w-full lg:w-auto shrink-0">
+            <Link href="/" className="p-2 hover:bg-zinc-800 rounded-xl text-zinc-400 hover:text-white transition-colors" title="Trang chủ">
+              <Home className="w-5 h-5" />
+            </Link>
+            <button onClick={handleLogout} className="p-2 hover:bg-zinc-800 rounded-xl text-zinc-400 hover:text-white transition-colors" title="Đăng xuất">
+              <LogOut className="w-5 h-5" />
+            </button>
             <div className="flex bg-zinc-800/50 p-1 rounded-lg border border-zinc-700/50 w-full sm:w-auto overflow-x-auto hide-scrollbar">
               <button 
                 onClick={() => setActiveTab('overview')}
@@ -295,7 +306,7 @@ export default function PreviewMode({ params }: { params: { id: string } }) {
                 <div>
                   <h3 className="text-sm text-zinc-500 uppercase tracking-wider font-bold mb-2">Tóm tắt</h3>
                   <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800/50 text-zinc-300 whitespace-pre-wrap leading-relaxed h-full">
-                    {deck?.summary || 'Đang cập nhật nội dung tóm tắt...'}
+                    {deck?.summary || (deck?.transcript || deck?.documents?.transcript ? (deck?.transcript || deck?.documents?.transcript).substring(0, 300) + '...' : 'Không có nội dung tóm tắt')}
                   </div>
                 </div>
                 <div>

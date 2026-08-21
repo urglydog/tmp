@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { Loader2, ArrowLeft, ChevronLeft, ChevronRight, CheckCircle2, Network, Layers, ListChecks, Settings, Edit2, Trash2, RefreshCw, Download, Pencil, Globe, X, FileText, Sparkles, Send } from 'lucide-react';
+import { Loader2, ArrowLeft, ChevronLeft, ChevronRight, CheckCircle2, Network, Layers, ListChecks, Settings, Edit2, Trash2, RefreshCw, Download, Pencil, Globe, X, FileText, Sparkles, Send, Home, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Flashcard from '@/components/Flashcard';
@@ -134,6 +134,11 @@ export default function StudyMode({ params }: { params: { id: string } }) {
   useEffect(() => {
     fetchDeckAndCards();
   }, [supabase, params.id, router]);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push('/');
+  };
 
   useEffect(() => {
     if (isEditingTitle && titleInputRef.current) {
@@ -542,6 +547,12 @@ export default function StudyMode({ params }: { params: { id: string } }) {
             </div>
 
             {/* Avatar Profile Link */}
+            <Link href="/" className="p-2 hover:bg-zinc-800 rounded-xl text-zinc-400 hover:text-white transition-colors" title="Trang chủ">
+              <Home className="w-5 h-5" />
+            </Link>
+            <button onClick={handleLogout} className="p-2 hover:bg-zinc-800 rounded-xl text-zinc-400 hover:text-white transition-colors" title="Đăng xuất">
+              <LogOut className="w-5 h-5" />
+            </button>
             <Link href="/profile" className="hidden sm:flex w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 hover:from-blue-400 hover:to-purple-500 rounded-full items-center justify-center font-bold text-white shadow-lg transition-all border-2 border-transparent hover:border-purple-400 shrink-0" title="Cài đặt Tài khoản">
               {user?.user_metadata?.display_name?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || 'U'}
             </Link>
@@ -658,7 +669,7 @@ export default function StudyMode({ params }: { params: { id: string } }) {
                 <div>
                   <h3 className="text-sm text-zinc-500 uppercase tracking-wider font-bold mb-2">Tóm tắt</h3>
                   <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800/50 text-zinc-300 whitespace-pre-wrap leading-relaxed h-full">
-                    {deck?.summary || 'Đang cập nhật nội dung tóm tắt...'}
+                    {deck?.summary || (deck?.transcript || deck?.documents?.transcript ? (deck?.transcript || deck?.documents?.transcript).substring(0, 300) + '...' : 'Không có nội dung tóm tắt')}
                   </div>
                 </div>
                 <div>

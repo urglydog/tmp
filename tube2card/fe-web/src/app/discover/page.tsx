@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { Loader2, Globe, Search, Layers, Copy, CheckCircle2, ArrowLeft, Eye } from 'lucide-react';
+import { Loader2, Globe, Search, Layers, Copy, CheckCircle2, ArrowLeft, Eye, Home, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -41,6 +41,11 @@ export default function DiscoverPage() {
       if (fallbackData) setPublicDecks(fallbackData);
     }
     setLoading(false);
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push('/');
   };
 
   const handleCloneDeck = async (deck: any) => {
@@ -120,7 +125,10 @@ export default function DiscoverPage() {
       <div className="max-w-6xl mx-auto z-10 relative">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-12 gap-6">
           <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="p-3 bg-zinc-900 hover:bg-zinc-800 rounded-xl transition-colors border border-zinc-800 text-zinc-400 hover:text-white">
+            <Link href="/" className="p-3 bg-zinc-900 hover:bg-zinc-800 rounded-xl transition-colors border border-zinc-800 text-zinc-400 hover:text-white" title="Trang chủ">
+              <Home className="w-5 h-5" />
+            </Link>
+            <Link href="/dashboard" className="p-3 bg-zinc-900 hover:bg-zinc-800 rounded-xl transition-colors border border-zinc-800 text-zinc-400 hover:text-white" title="Thư viện">
               <ArrowLeft className="w-5 h-5" />
             </Link>
             <div>
@@ -129,6 +137,12 @@ export default function DiscoverPage() {
               </h1>
               <p className="text-zinc-400 mt-2">Tìm kiếm và lưu các bộ Flashcard hữu ích từ người dùng khác.</p>
             </div>
+          </div>
+          
+          <div className="flex items-center gap-4">
+            <button onClick={handleLogout} className="p-2 hover:bg-zinc-800 rounded-xl text-zinc-400 hover:text-white transition-colors" title="Đăng xuất">
+              <LogOut className="w-5 h-5" />
+            </button>
           </div>
 
           <div className="relative w-full md:w-96">
