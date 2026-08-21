@@ -390,7 +390,7 @@ class CreatePaymentRequest(BaseModel):
     plan_type: str # 'pro' or 'premium'
 
 @app.post("/create-payment-link")
-async def create_payment_link(req: CreatePaymentRequest):
+async def create_payment_link(req: CreatePaymentRequest, origin: str = Header(None)):
     if not payos_client:
         raise HTTPException(status_code=500, detail="PayOS chưa được cấu hình. Vui lòng thêm PAYOS_API_KEY vào biến môi trường.")
         
@@ -409,18 +409,24 @@ async def create_payment_link(req: CreatePaymentRequest):
 
     # Lưu transaction vào Supabase
     if supabase:
-        try:
-            supabase.table("transactions").insert({
-                "order_code": order_code,
-                "user_id": req.user_id,
-                "amount": amount,
-                "credits_added": credits_added,
-                "status": "PENDING"
-            }).execute()
-        except Exception as db_err:
-            print(f"[Supabase DB Error]: {db_err}")
-            raise HTTPException(status_code=500, detail="Lỗi bảo mật (RLS) Database. Vui lòng chạy đoạn mã SQL để cấp quyền Insert.")
-    frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
+        import time
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                supabase.table("transactions").insert({
+                    "order_code": order_code,
+                    "user_id": req.user_id,
+                    "amount": amount,
+                    "credits_added": credits_added,
+                    "status": "PENDING"
+                }).execute()
+                break # Thành công thì thoát vòng lặp
+            except Exception as db_err:
+                print(f"[Supabase DB Error - Lần {attempt + 1}]: {db_err}")
+                if attempt == max_retries - 1:
+                    raise HTTPException(status_code=500, detail=f"Lỗi kết nối CSDL: {str(db_err)}. Vui lòng thử lại.")
+                time.sleep(1) # Đợi 1 giây rồi thử lại
+    frontend_url = origin if origin else os.getenv("FRONTEND_URL", "http://localhost:3000")
     
     payment_data = PaymentData(
         orderCode=order_code,
@@ -478,24 +484,27 @@ async def verify_payment(order_code: int):
     try:
         # Gọi API PayOS kiểm tra trạng thái đơn hàng
         payment_info = payos_client.getPaymentLinkInformation(order_code)
-        if payment_info.status == "PAID":
-            if supabase:
-                tx = supabase.table("transactions").select("*").eq("order_code", order_code).execute()
-                if tx.data and len(tx.data) > 0 and tx.data[0]["status"] == "PENDING":
-                    user_id = tx.data[0]["user_id"]
-                    credits_added = tx.data[0]["credits_added"]
-                    
-                    # 1. Update trạng thái
-                    supabase.table("transactions").update({"status": "PAID"}).eq("order_code", order_code).execute()
-                    
-                    # 2. Cộng điểm
+        if supabase:
+            tx = supabase.table("transactions").select("*").eq("order_code", order_code).execute()
+            if tx.data and len(tx.data) > 0:
+                current_status = tx.data[0]["status"]
+                user_id = tx.data[0]["user_id"]
+                credits_added = tx.data[0]["credits_added"]
+                
+                # 1. Update trạng thái (Dù là PAID, CANCELLED, hay gì thì cũng update theo PayOS)
+                if current_status != payment_info.status:
+                    supabase.table("transactions").update({"status": payment_info.status}).eq("order_code", order_code).execute()
+                
+                # 2. Chỉ cộng điểm nếu trạng thái chuyển thành PAID và trước đó chưa PAID
+                if payment_info.status == "PAID" and current_status != "PAID":
                     user_credits = supabase.table("user_credits").select("credits").eq("user_id", user_id).execute()
                     if user_credits.data and len(user_credits.data) > 0:
                         new_credits = user_credits.data[0]["credits"] + credits_added
                         supabase.table("user_credits").update({"credits": new_credits}).eq("user_id", user_id).execute()
                     else:
                         supabase.table("user_credits").insert({"user_id": user_id, "credits": 5 + credits_added}).execute()
-            return {"success": True, "status": "PAID"}
+        
+        return {"success": True, "status": payment_info.status}
         return {"success": True, "status": payment_info.status}
     except Exception as e:
         print(f"Verify error: {e}")

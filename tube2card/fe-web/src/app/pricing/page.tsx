@@ -46,7 +46,7 @@ function PricingContent() {
     } else {
       setUser(session.user);
       // Lấy credits của user
-      const { data: creditsData } = await supabase.from('user_credits').select('credits').eq('user_id', session.user.id).single();
+      const { data: creditsData } = await supabase.from('user_credits').select('credits').eq('user_id', session.user.id).maybeSingle();
       if (creditsData) {
         setUserCredits(creditsData.credits);
       }
