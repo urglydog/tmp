@@ -129,11 +129,18 @@ export default function Home() {
           'Content-Type': 'application/json',
           ...(sessionToken ? { 'Authorization': `Bearer ${sessionToken}` } : {})
         },
-        body: JSON.stringify({ url })
+        body: JSON.stringify({ url, user_id: user ? user.id : null })
       });
 
       const data = await response.json();
       
+      if (response.status === 402) {
+        if (confirm("Bạn đã hết điểm tín dụng. Chuyển đến trang Nâng cấp?")) {
+          window.location.href = '/pricing';
+        }
+        throw new Error(data.detail);
+      }
+
       if (!response.ok) {
         throw new Error(data.detail || 'Lỗi kết nối tới Server AI');
       }
@@ -239,6 +246,9 @@ export default function Home() {
                 </div>
                 
                 <div className="flex items-center gap-2">
+                  <Link href="/pricing" className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white rounded-lg transition-all text-sm font-bold shadow-lg">
+                    💎 Nâng cấp
+                  </Link>
                   <Link href="/dashboard" className="flex items-center gap-2 px-4 py-2 bg-purple-600/20 hover:bg-purple-600/40 text-purple-400 rounded-lg transition-colors text-sm font-medium border border-purple-500/20">
                     <Library size={16} /> Thư viện
                   </Link>

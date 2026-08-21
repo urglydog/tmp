@@ -2,8 +2,7 @@ import os
 import json
 import httpx
 # Tắt xác thực SSL cho môi trường Local (Bypass Proxy)
-os.environ["CURL_CA_BUNDLE"] = ""
-os.environ["SSL_CERT_FILE"] = ""
+# Đã được cấu hình ở OS nên không cần tắt thủ công nữa.
 from fastapi import FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -13,6 +12,15 @@ from youtube_transcript_api import YouTubeTranscriptApi
 import re
 import requests
 import urllib3
+import random
+try:
+    from payos import PayOS
+    from payos.type import PaymentData, ItemData
+except ImportError as e:
+    print(f"LỖI IMPORT PAYOS: {e}")
+    PaymentData = None
+    ItemData = None
+    PayOS = None
 
 # Tắt cảnh báo InsecureRequestWarning
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -23,6 +31,20 @@ def new_request(self, method, url, **kwargs):
     kwargs['verify'] = False
     return old_request(self, method, url, **kwargs)
 requests.Session.request = new_request
+
+# Monkey-patch httpx để bypass SSL proxy công ty
+import httpx
+old_httpx_client_init = httpx.Client.__init__
+def new_httpx_client_init(self, *args, **kwargs):
+    kwargs['verify'] = False
+    old_httpx_client_init(self, *args, **kwargs)
+httpx.Client.__init__ = new_httpx_client_init
+
+old_httpx_async_client_init = httpx.AsyncClient.__init__
+def new_httpx_async_client_init(self, *args, **kwargs):
+    kwargs['verify'] = False
+    old_httpx_async_client_init(self, *args, **kwargs)
+httpx.AsyncClient.__init__ = new_httpx_async_client_init
 
 # Load env từ file .env
 load_dotenv()
@@ -45,8 +67,32 @@ if SUPABASE_URL and SUPABASE_KEY:
 else:
     supabase = None
 
+# PayOS Setup
+PAYOS_CLIENT_ID = os.getenv("PAYOS_CLIENT_ID")
+PAYOS_API_KEY = os.getenv("PAYOS_API_KEY")
+PAYOS_CHECKSUM_KEY = os.getenv("PAYOS_CHECKSUM_KEY")
+
+print(f"DEBUG - PAYOS_CLIENT_ID: {bool(PAYOS_CLIENT_ID)}")
+print(f"DEBUG - PAYOS_API_KEY: {bool(PAYOS_API_KEY)}")
+print(f"DEBUG - PAYOS_CHECKSUM_KEY: {bool(PAYOS_CHECKSUM_KEY)}")
+print(f"DEBUG - PayOS Module: {bool(PayOS)}")
+
+payos_client = None
+if PAYOS_CLIENT_ID and PAYOS_API_KEY and PAYOS_CHECKSUM_KEY and PayOS:
+    custom_http_client = httpx.Client(verify=False)
+    payos_client = PayOS(
+        client_id=PAYOS_CLIENT_ID, 
+        api_key=PAYOS_API_KEY, 
+        checksum_key=PAYOS_CHECKSUM_KEY,
+        http_client=custom_http_client
+    )
+    print("DEBUG - PayOS Client Khởi tạo THÀNH CÔNG")
+else:
+    print("DEBUG - PayOS Client Khởi tạo THẤT BẠI")
+
 class GenerateRequest(BaseModel):
     url: str
+    user_id: str | None = None
 
 def extract_video_id(url: str) -> str:
     """Trích xuất Video ID từ URL Youtube (hỗ trợ nhiều định dạng)"""
@@ -140,6 +186,12 @@ async def generate_flashcards_gemini(transcript: str) -> dict:
 @app.post("/generate")
 async def generate_materials(req: GenerateRequest):
     try:
+        # Kiểm tra điểm tín dụng nếu có user_id
+        if req.user_id and supabase:
+            user_credits = supabase.table("user_credits").select("credits").eq("user_id", req.user_id).execute()
+            if not user_credits.data or len(user_credits.data) == 0 or user_credits.data[0]["credits"] <= 0:
+                raise HTTPException(status_code=402, detail="Bạn đã hết lượt tạo (Credits). Vui lòng mua thêm điểm để sử dụng AI.")
+                
         # 1. Trích xuất Video ID và Bóc băng Youtube thật
         try:
             video_id = extract_video_id(req.url)
@@ -164,6 +216,11 @@ async def generate_materials(req: GenerateRequest):
             # Chỉ lấy mindmap từ chunk đầu tiên để tránh xung đột
             if idx == 0:
                 mindmap_str = gemini_result.get("mindmap", "")
+                
+        # Trừ điểm sau khi tạo thành công
+        if req.user_id and supabase:
+            current_credits = user_credits.data[0]["credits"]
+            supabase.table("user_credits").update({"credits": current_credits - 1}).eq("user_id", req.user_id).execute()
 
         return {
             "success": True,
@@ -327,6 +384,122 @@ async def regenerate_custom(req: CustomQuizRequest):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+class CreatePaymentRequest(BaseModel):
+    user_id: str
+    plan_type: str # 'pro' or 'premium'
+
+@app.post("/create-payment-link")
+async def create_payment_link(req: CreatePaymentRequest):
+    if not payos_client:
+        raise HTTPException(status_code=500, detail="PayOS chưa được cấu hình. Vui lòng thêm PAYOS_API_KEY vào biến môi trường.")
+        
+    order_code = random.randint(100000, 999999999)
+    
+    if req.plan_type == 'pro':
+        amount = 49000
+        credits_added = 100
+        desc = "Tube2Card Pro"
+    elif req.plan_type == 'premium':
+        amount = 99000
+        credits_added = 300
+        desc = "Tube2Card Premium"
+    else:
+        raise HTTPException(status_code=400, detail="Gói không hợp lệ")
+
+    # Lưu transaction vào Supabase
+    if supabase:
+        try:
+            supabase.table("transactions").insert({
+                "order_code": order_code,
+                "user_id": req.user_id,
+                "amount": amount,
+                "credits_added": credits_added,
+                "status": "PENDING"
+            }).execute()
+        except Exception as db_err:
+            print(f"[Supabase DB Error]: {db_err}")
+            raise HTTPException(status_code=500, detail="Lỗi bảo mật (RLS) Database. Vui lòng chạy đoạn mã SQL để cấp quyền Insert.")
+    frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
+    
+    payment_data = PaymentData(
+        orderCode=order_code,
+        amount=amount,
+        description=f"Nap {credits_added} point",
+        items=[ItemData(name=desc, quantity=1, price=amount)],
+        cancelUrl=f"{frontend_url}/pricing?status=cancel",
+        returnUrl=f"{frontend_url}/pricing?status=success"
+    )
+    
+    try:
+        payment_link = payos_client.createPaymentLink(paymentData=payment_data)
+        return {"success": True, "checkoutUrl": payment_link.checkoutUrl}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+from fastapi import Request
+@app.post("/webhook/payos")
+async def payos_webhook(request: Request):
+    body = await request.json()
+    try:
+        # Cập nhật DB khi PayOS báo thanh toán thành công
+        data = body.get("data", {})
+        order_code = data.get("orderCode")
+        code = body.get("code")
+        
+        if code == "00" and order_code:
+            if supabase:
+                tx = supabase.table("transactions").select("*").eq("order_code", order_code).execute()
+                if tx.data and len(tx.data) > 0 and tx.data[0]["status"] == "PENDING":
+                    user_id = tx.data[0]["user_id"]
+                    credits_added = tx.data[0]["credits_added"]
+                    
+                    # 1. Update trạng thái
+                    supabase.table("transactions").update({"status": "PAID"}).eq("order_code", order_code).execute()
+                    
+                    # 2. Cộng điểm
+                    user_credits = supabase.table("user_credits").select("credits").eq("user_id", user_id).execute()
+                    if user_credits.data and len(user_credits.data) > 0:
+                        new_credits = user_credits.data[0]["credits"] + credits_added
+                        supabase.table("user_credits").update({"credits": new_credits}).eq("user_id", user_id).execute()
+                    else:
+                        supabase.table("user_credits").insert({"user_id": user_id, "credits": 5 + credits_added}).execute()
+            
+            return {"success": True}
+        return {"success": False, "message": "Ignored"}
+    except Exception as e:
+        print(f"Webhook error: {e}")
+        return {"success": False}
+
+@app.get("/verify-payment/{order_code}")
+async def verify_payment(order_code: int):
+    if not payos_client:
+        return {"success": False, "detail": "PayOS chưa được cấu hình"}
+    try:
+        # Gọi API PayOS kiểm tra trạng thái đơn hàng
+        payment_info = payos_client.getPaymentLinkInformation(order_code)
+        if payment_info.status == "PAID":
+            if supabase:
+                tx = supabase.table("transactions").select("*").eq("order_code", order_code).execute()
+                if tx.data and len(tx.data) > 0 and tx.data[0]["status"] == "PENDING":
+                    user_id = tx.data[0]["user_id"]
+                    credits_added = tx.data[0]["credits_added"]
+                    
+                    # 1. Update trạng thái
+                    supabase.table("transactions").update({"status": "PAID"}).eq("order_code", order_code).execute()
+                    
+                    # 2. Cộng điểm
+                    user_credits = supabase.table("user_credits").select("credits").eq("user_id", user_id).execute()
+                    if user_credits.data and len(user_credits.data) > 0:
+                        new_credits = user_credits.data[0]["credits"] + credits_added
+                        supabase.table("user_credits").update({"credits": new_credits}).eq("user_id", user_id).execute()
+                    else:
+                        supabase.table("user_credits").insert({"user_id": user_id, "credits": 5 + credits_added}).execute()
+            return {"success": True, "status": "PAID"}
+        return {"success": True, "status": payment_info.status}
+    except Exception as e:
+        print(f"Verify error: {e}")
+        return {"success": False, "detail": str(e)}
 
 if __name__ == "__main__":
     import uvicorn

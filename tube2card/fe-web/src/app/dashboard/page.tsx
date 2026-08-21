@@ -10,6 +10,7 @@ export default function Dashboard() {
   const [user, setUser] = useState<any>(null);
   const [decks, setDecks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [credits, setCredits] = useState<number>(0);
   const router = useRouter();
   const supabase = createClient();
 
@@ -33,6 +34,12 @@ export default function Dashboard() {
 
       if (decksData) {
         setDecks(decksData);
+      }
+
+      // Fetch user credits
+      const { data: creditsData } = await supabase.from('user_credits').select('credits').eq('user_id', session.user.id).single();
+      if (creditsData) {
+        setCredits(creditsData.credits);
       }
       setLoading(false);
     };
@@ -73,6 +80,15 @@ export default function Dashboard() {
           </div>
           
           <div className="flex items-center gap-4">
+            {credits > 0 && (
+              <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/20 text-purple-400 rounded-xl font-bold">
+                💎 {credits} Credits
+              </div>
+            )}
+            <Link href="/pricing" className="hidden md:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white rounded-xl transition-all font-bold shadow-[0_0_20px_-5px_rgba(168,85,247,0.5)]">
+              {credits > 5 ? 'Nạp thêm' : 'Nâng cấp'}
+            </Link>
+            
             <Link href="/discover" className="hidden md:flex items-center gap-2 px-4 py-2 bg-blue-600/10 text-blue-400 hover:bg-blue-600/20 border border-blue-500/20 rounded-xl transition-colors font-medium">
               <Globe className="w-5 h-5" /> Khám phá Cộng đồng
             </Link>
