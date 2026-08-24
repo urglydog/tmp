@@ -3,10 +3,12 @@ import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const codeQuery = searchParams.get('code');
+
     const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    
     if (!serviceRoleKey) {
-      return NextResponse.json({ error: 'Thiếu SUPABASE_SERVICE_ROLE_KEY trong môi trường Server' }, { status: 500 });
+      return NextResponse.json({ error: 'Thiếu SUPABASE_SERVICE_ROLE_KEY' }, { status: 500 });
     }
 
     const supabaseAdmin = createClient(
@@ -14,17 +16,21 @@ export async function GET(req: Request) {
       serviceRoleKey
     );
 
-    // 1. Lấy tất cả Giao dịch
-    const { data: transactions, error: txErr } = await supabaseAdmin
-      .from('transactions')
-      .select('*')
-      .order('created_at', { ascending: false });
+    let query = supabaseAdmin.from('transactions').select('*').order('created_at', { ascending: false });
+    
+    if (codeQuery) {
+      query = query.eq('order_code', Number(codeQuery));
+    }
+
+    const { data: transactions, error: txErr } = await query;
     
     if (txErr) throw txErr;
 
-    // Lấy thông tin user để hiển thị kèm email/tên nếu có thể
+    if (transactions.length === 0) {
+       return NextResponse.json({ success: true, transactions: [] });
+    }
+
     const { data: users, error: usersErr } = await supabaseAdmin.auth.admin.listUsers();
-    
     if (usersErr) throw usersErr;
 
     const txWithUsers = transactions.map(tx => {

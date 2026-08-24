@@ -54,3 +54,18 @@ Dựa trên tài liệu phân tích hệ thống gốc (`TUBE2CARD_PROJECT_ANALY
 
 ### 3.4. Progressive Web App (PWA)
 - Cấu hình Next.js PWA để biến trang web thành một ứng dụng Mobile. Người dùng có thể nhấn "Thêm vào màn hình chính" (Add to Homescreen) để học Flashcard như một App thực thụ trên iOS/Android mà không cần lên App Store.
+
+---
+
+## Phase 4: Bảo mật Cấp cao, RBAC & Trải nghiệm Người Dùng (Resilience & UX)
+*Hoàn thiện các tính năng quản trị chuyên sâu và đảm bảo sự công bằng, an toàn cho túi tiền của người dùng.*
+
+### 4.1. Hoàn thiện Admin Dashboard (CRUD & RBAC)
+- **Tính năng RBAC Thực chiến**: Quản lý phiên đăng nhập (Active Sessions), ép buộc đăng xuất (Force Logout) khi phát hiện bất thường.
+- **Quản lý Tài khoản Khẩn cấp**: Khả năng Reset Mật khẩu hoặc khôi phục quyền truy cập cho người dùng khi họ không thể nhận email khôi phục.
+- **CRUD Toàn diện**: Mở rộng quyền hạn Admin không chỉ để "xem" (View) mà còn có thể tạo, sửa, xóa, cấp phát Token/Point trực tiếp từ giao diện một cách an toàn.
+
+### 4.2. Cơ chế Xử lý Nền (Background Processing) & Bảo vệ Credit
+- **Xử lý Bất đồng bộ (Async Background Jobs)**: Áp dụng cơ chế (Ví dụ: Webhook, Polling, SSE kết hợp với Redis/Celery) để xử lý các video có thời lượng dài. Đảm bảo UI không bị "treo" chờ đợi.
+- **Bảo toàn Tài sản (Credit/Token Protection)**: Lưu trạng thái phiên làm việc (Processing State) vào Database ngay khi quá trình bắt đầu. Nếu người dùng vô tình tải lại trang (Reload) hoặc thoát ngang, hệ thống vẫn tiếp tục xử lý ở Backend. 
+- **Auto-Recovery**: Khi người dùng quay lại trang, hệ thống tự động tải lại kết quả đã hoàn thành mà KHÔNG bị trừ Credit oan uổng lần thứ hai.

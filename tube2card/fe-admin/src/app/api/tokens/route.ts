@@ -3,10 +3,12 @@ import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const emailQuery = searchParams.get('email');
+
     const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    
     if (!serviceRoleKey) {
-      return NextResponse.json({ error: 'Thiếu SUPABASE_SERVICE_ROLE_KEY trong môi trường Server' }, { status: 500 });
+      return NextResponse.json({ error: 'Thiếu SUPABASE_SERVICE_ROLE_KEY' }, { status: 500 });
     }
 
     const supabaseAdmin = createClient(
@@ -14,25 +16,47 @@ export async function GET(req: Request) {
       serviceRoleKey
     );
 
-    // 1. Lấy tất cả Token Usages
-    const { data: tokens, error: tokensErr } = await supabaseAdmin
-      .from('token_usages')
-      .select('*')
-      .order('created_at', { ascending: false });
+    const { data: users, error: usersErr } = await supabaseAdmin.auth.admin.listUsers();
+    if (usersErr) throw usersErr;
+
+    let targetUserId = null;
+    let targetUserEmail = null;
+    let targetUserName = null;
+
+    if (emailQuery) {
+      const matchedUser = users.users.find(u => u.email === emailQuery);
+      if (!matchedUser) {
+        return NextResponse.json({ success: true, tokens: [] });
+      }
+      targetUserId = matchedUser.id;
+      targetUserEmail = matchedUser.email;
+      targetUserName = matchedUser.user_metadata?.display_name || matchedUser.email?.split('@')[0];
+    }
+
+    let query = supabaseAdmin.from('token_usages').select('*').order('created_at', { ascending: false }).limit(200);
+    
+    if (targetUserId) {
+      query = query.eq('user_id', targetUserId);
+    }
+
+    const { data: tokens, error: tokensErr } = await query;
     
     if (tokensErr) throw tokensErr;
 
-    // 2. Lấy thông tin user
-    const { data: users, error: usersErr } = await supabaseAdmin.auth.admin.listUsers();
-    
-    if (usersErr) throw usersErr;
-
     const tokensWithUsers = tokens.map(t => {
-      const user = users.users.find(u => u.id === t.user_id);
+      let uEmail = targetUserEmail;
+      let uName = targetUserName;
+      
+      if (!targetUserId) {
+        const u = users.users.find(user => user.id === t.user_id);
+        uEmail = u ? u.email : 'Unknown';
+        uName = u ? (u.user_metadata?.display_name || u.email?.split('@')[0]) : 'Unknown';
+      }
+      
       return {
         ...t,
-        user_email: user ? user.email : 'Unknown',
-        user_name: user ? (user.user_metadata?.display_name || user.email?.split('@')[0]) : 'Unknown'
+        user_email: uEmail,
+        user_name: uName
       };
     });
 
