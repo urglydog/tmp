@@ -4,6 +4,7 @@ import httpx
 # Tắt xác thực SSL cho môi trường Local (Bypass Proxy)
 # Đã được cấu hình ở OS nên không cần tắt thủ công nữa.
 from fastapi import FastAPI, HTTPException, Header
+from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
@@ -185,57 +186,66 @@ async def generate_flashcards_gemini(transcript: str) -> dict:
 
 @app.post("/generate")
 async def generate_materials(req: GenerateRequest):
-    try:
-        # Kiểm tra điểm tín dụng nếu có user_id
-        if req.user_id and supabase:
-            user_credits = supabase.table("user_credits").select("credits").eq("user_id", req.user_id).execute()
-            if not user_credits.data or len(user_credits.data) == 0 or user_credits.data[0]["credits"] <= 0:
-                raise HTTPException(status_code=402, detail="Bạn đã hết lượt tạo (Credits). Vui lòng mua thêm điểm để sử dụng AI.")
-                
-        # 1. Trích xuất Video ID và Bóc băng Youtube thật
+    async def event_generator():
         try:
-            video_id = extract_video_id(req.url)
-            transcript = fetch_transcript(video_id)
-        except Exception as e:
-            raise HTTPException(status_code=400, detail=f"Không thể bóc băng Youtube: {str(e)}")
-        
-        # 2. Cơ chế Chunking: Chia nhỏ transcript nếu quá dài (vd mỗi chunk 8000 ký tự)
-        CHUNK_SIZE = 8000
-        chunks = [transcript[i:i + CHUNK_SIZE] for i in range(0, len(transcript), CHUNK_SIZE)]
-        
-        all_flashcards = []
-        mindmap_str = ""
-        all_quizzes = []
-
-        # Xử lý từng chunk
-        for idx, chunk in enumerate(chunks):
-            gemini_result = await generate_flashcards_gemini(chunk)
-            all_flashcards.extend(gemini_result.get("flashcards", []))
-            all_quizzes.extend(gemini_result.get("quizzes", []))
-            
-            # Chỉ lấy mindmap từ chunk đầu tiên để tránh xung đột
-            if idx == 0:
-                mindmap_str = gemini_result.get("mindmap", "")
+            # Kiểm tra điểm tín dụng nếu có user_id
+            if req.user_id and supabase:
+                user_credits = supabase.table("user_credits").select("credits").eq("user_id", req.user_id).execute()
+                if not user_credits.data or len(user_credits.data) == 0 or user_credits.data[0]["credits"] <= 0:
+                    yield f"data: {json.dumps({'error': 'Bạn đã hết lượt tạo (Credits). Vui lòng mua thêm điểm để sử dụng AI.', 'code': 402})}\n\n"
+                    return
+                    
+            # 1. Trích xuất Video ID và Bóc băng Youtube thật
+            try:
+                yield f"data: {json.dumps({'status': 'extracting_id', 'message': 'Đang trích xuất Video ID...'})}\n\n"
+                video_id = extract_video_id(req.url)
                 
-        # Trừ điểm sau khi tạo thành công
-        if req.user_id and supabase:
-            current_credits = user_credits.data[0]["credits"]
-            supabase.table("user_credits").update({"credits": current_credits - 1}).eq("user_id", req.user_id).execute()
+                yield f"data: {json.dumps({'status': 'fetching_transcript', 'message': 'Đang tải phụ đề Youtube...'})}\n\n"
+                transcript = fetch_transcript(video_id)
+            except Exception as e:
+                yield f"data: {json.dumps({'error': f'Không thể bóc băng Youtube: {str(e)}', 'code': 400})}\n\n"
+                return
+            
+            # 2. Cơ chế Chunking: Chia nhỏ transcript nếu quá dài (vd mỗi chunk 8000 ký tự)
+            CHUNK_SIZE = 8000
+            chunks = [transcript[i:i + CHUNK_SIZE] for i in range(0, len(transcript), CHUNK_SIZE)]
+            
+            all_flashcards = []
+            mindmap_str = ""
+            all_quizzes = []
 
-        return {
-            "success": True,
-            "data": {
-                "message": "Đã bóc băng, tạo Flashcard, Mindmap và Quiz thành công (Comprehensive Extraction)!",
-                "flashcards": all_flashcards,
-                "mindmap": mindmap_str,
-                "quizzes": all_quizzes,
-                "transcript": transcript
+            # Xử lý từng chunk
+            for idx, chunk in enumerate(chunks):
+                yield f"data: {json.dumps({'status': 'processing_chunk', 'message': f'AI đang phân tích phần {idx+1}/{len(chunks)}...', 'progress': (idx/len(chunks))*100})}\n\n"
+                gemini_result = await generate_flashcards_gemini(chunk)
+                all_flashcards.extend(gemini_result.get("flashcards", []))
+                all_quizzes.extend(gemini_result.get("quizzes", []))
+                
+                # Chỉ lấy mindmap từ chunk đầu tiên để tránh xung đột
+                if idx == 0:
+                    mindmap_str = gemini_result.get("mindmap", "")
+                    
+            # Trừ điểm sau khi tạo thành công
+            if req.user_id and supabase:
+                current_credits = user_credits.data[0]["credits"]
+                supabase.table("user_credits").update({"credits": current_credits - 1}).eq("user_id", req.user_id).execute()
+
+            # Báo cáo hoàn tất
+            final_data = {
+                "success": True,
+                "data": {
+                    "message": "Đã bóc băng, tạo Flashcard, Mindmap và Quiz thành công!",
+                    "flashcards": all_flashcards,
+                    "mindmap": mindmap_str,
+                    "quizzes": all_quizzes,
+                    "transcript": transcript
+                }
             }
-        }
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+            yield f"data: {json.dumps({'status': 'done', 'result': final_data})}\n\n"
+        except Exception as e:
+            yield f"data: {json.dumps({'error': f'Lỗi hệ thống: {str(e)}', 'code': 500})}\n\n"
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
 
 class RegenerateRequest(BaseModel):
     transcript: str
@@ -505,10 +515,80 @@ async def verify_payment(order_code: int):
                         supabase.table("user_credits").insert({"user_id": user_id, "credits": 5 + credits_added}).execute()
         
         return {"success": True, "status": payment_info.status}
-        return {"success": True, "status": payment_info.status}
     except Exception as e:
         print(f"Verify error: {e}")
         return {"success": False, "detail": str(e)}
+
+# --- PHASE 3: KIẾN TRÚC MỚI (TÁCH BIỆT BÓC BĂNG & SINH THẺ) ---
+
+class ProcessDocumentRequest(BaseModel):
+    url: str
+    user_id: str | None = None
+
+@app.post("/process-document")
+async def process_document(req: ProcessDocumentRequest):
+    async def event_generator():
+        try:
+            yield f"data: {json.dumps({'status': 'extracting_id', 'message': 'Đang phân tích nguồn Video...'})}\n\n"
+            # 1. Trích xuất ID
+            try:
+                video_id = extract_video_id(req.url)
+            except Exception as e:
+                yield f"data: {json.dumps({'error': f'Không hỗ trợ link này: {str(e)}', 'code': 400})}\n\n"
+                return
+                
+            yield f"data: {json.dumps({'status': 'fetching_transcript', 'message': 'Đang tải phụ đề Youtube...'})}\n\n"
+            # 2. Bóc băng
+            try:
+                transcript = fetch_transcript(video_id)
+            except Exception as e:
+                yield f"data: {json.dumps({'error': f'Không thể bóc băng Youtube: {str(e)}', 'code': 400})}\n\n"
+                return
+                
+            # 3. Lưu vào Supabase (Bỏ qua RLS bằng cách gọi từ Backend, hoặc Backend chỉ trả về transcript cho FE tự lưu)
+            # Hiện tại FE tự gọi /api/save nên ta trả về transcript.
+            
+            final_data = {
+                "success": True,
+                "data": {
+                    "message": "Đã bóc băng thành công!",
+                    "transcript": transcript
+                }
+            }
+            yield f"data: {json.dumps({'status': 'done', 'result': final_data})}\n\n"
+            
+        except Exception as e:
+            yield f"data: {json.dumps({'error': f'Lỗi hệ thống: {str(e)}', 'code': 500})}\n\n"
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+class GenerateTaskRequest(BaseModel):
+    transcript: str
+    task_type: str # 'flashcard', 'mindmap', 'quiz'
+    user_id: str | None = None
+
+@app.post("/generate-tasks")
+async def generate_tasks(req: GenerateTaskRequest):
+    try:
+        # Tương lai: Trừ Point/Token ở đây
+        if req.task_type not in ['flashcard', 'mindmap', 'quiz']:
+            raise HTTPException(status_code=400, detail="Task type không hợp lệ")
+            
+        transcript = req.transcript[:8000] # Giới hạn xử lý cơ bản
+        
+        if req.task_type == 'flashcard':
+            gemini_result = await generate_flashcards_gemini(transcript)
+            return {"success": True, "message": f"Đã sinh Flashcard thành công", "data": {"flashcards": gemini_result.get("flashcards", [])}}
+        elif req.task_type == 'mindmap':
+            gemini_result = await generate_missing_gemini(transcript)
+            return {"success": True, "message": f"Đã sinh Sơ đồ tư duy thành công", "data": {"mindmap": gemini_result.get("mindmap", "")}}
+        elif req.task_type == 'quiz':
+            gemini_result = await generate_missing_gemini(transcript)
+            return {"success": True, "message": f"Đã sinh Trắc nghiệm thành công", "data": {"quizzes": gemini_result.get("quizzes", [])}}
+            
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 if __name__ == "__main__":
     import uvicorn
