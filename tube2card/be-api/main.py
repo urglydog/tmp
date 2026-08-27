@@ -104,13 +104,11 @@ def extract_video_id(url: str) -> str:
 def fetch_transcript(video_id: str) -> str:
     """Lấy phụ đề từ Youtube và nối lại thành đoạn văn"""
     try:
-        # Xử lý Cookie thủ công nếu có để vượt rào chặn IP
         import os, requests
         raw_cookie = os.getenv("YOUTUBE_RAW_COOKIE")
         session = None
         if raw_cookie:
             session = requests.Session()
-            # Giả lập danh tính trình duyệt Chrome thật để đi kèm với Cookie
             session.headers.update({
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
                 "Accept-Language": "en-US,en;q=0.9,vi;q=0.8"
@@ -121,22 +119,71 @@ def fetch_transcript(video_id: str) -> str:
                     key, val = cookie_item.split("=", 1)
                     session.cookies.set(key, val, domain=".youtube.com")
                     
-        # Khởi tạo API (truyền session chứa cookie vào nếu có)
+        # CÁCH 1: Dùng youtube-transcript-api (nhanh nhưng hay bị chặn)
+        from youtube_transcript_api import YouTubeTranscriptApi
         api = YouTubeTranscriptApi(http_client=session) if session else YouTubeTranscriptApi()
-        # Lấy danh sách phụ đề có sẵn
-        transcript_list = api.list(video_id)
-        # Ưu tiên lấy tiếng Việt, dự phòng tiếng Anh
+        
         try:
-            transcript = transcript_list.find_transcript(['vi'])
-        except:
-            transcript = transcript_list.find_transcript(['en'])
+            transcript_list = api.list(video_id)
+            try:
+                transcript = transcript_list.find_transcript(['vi'])
+            except:
+                transcript = transcript_list.find_transcript(['en'])
+                
+            data = transcript.fetch()
+            return ' '.join([t['text'] for t in data])
             
-        # Lấy nội dung text
-        data = transcript.fetch()
-        text = ' '.join([t['text'] for t in data])
-        return text
-    except Exception as e:
-        raise ValueError(f"Không thể lấy phụ đề. Lỗi chi tiết: {str(e)}")
+        except Exception as api_err:
+            print(f"CÁCH 1 BỊ CHẶN: {api_err}. ĐANG CHUYỂN SANG CÁCH 2 (yt-dlp)...")
+            
+            # CÁCH 2: Dùng yt-dlp giả lập điện thoại Android để lách
+            import yt_dlp
+            ydl_opts = {
+                'skip_download': True,
+                'writeautomaticsub': True,
+                'subtitleslangs': ['vi', 'en'],
+                'quiet': True,
+                'extractor_args': {'youtube': {'player_client': ['android', 'ios']}}
+            }
+            
+            # Tạm ghi file cookies.txt chuẩn Netscape cho yt-dlp đọc
+            if raw_cookie:
+                with open("ytdlp_cookies.txt", "w") as f:
+                    f.write("# Netscape HTTP Cookie File\n")
+                    for cookie_item in raw_cookie.split(";"):
+                        cookie_item = cookie_item.strip()
+                        if "=" in cookie_item:
+                            k, v = cookie_item.split("=", 1)
+                            f.write(f".youtube.com\tTRUE\t/\tTRUE\t2147483647\t{k}\t{v}\n")
+                ydl_opts['cookiefile'] = 'ytdlp_cookies.txt'
+                
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                info = ydl.extract_info(f"https://www.youtube.com/watch?v={video_id}", download=False)
+                captions = info.get('automatic_captions', {})
+                if not captions:
+                    captions = info.get('subtitles', {})
+                    
+                target_lang = 'vi' if 'vi' in captions else 'en' if 'en' in captions else None
+                if not target_lang:
+                    raise ValueError("Không tìm thấy phụ đề Tiếng Việt hay Tiếng Anh.")
+                    
+                json3_format = next((f for f in captions[target_lang] if f.get('ext') == 'json3'), None)
+                if not json3_format:
+                    raise ValueError("Không tìm được định dạng JSON3 của phụ đề.")
+                    
+                resp = requests.get(json3_format['url'], verify=False)
+                data = resp.json()
+                
+                text_chunks = []
+                for event in data.get('events', []):
+                    for seg in event.get('segs', []):
+                        if 'utf8' in seg:
+                            text_chunks.append(seg['utf8'])
+                
+                return ''.join(text_chunks).replace('\n', ' ').strip()
+                
+    except Exception as final_e:
+        raise ValueError(f"Không thể lách qua Youtube bằng bất kỳ cách nào. Lỗi cuối cùng: {str(final_e)}")
 
 async def generate_flashcards_gemini(transcript: str) -> dict:
     api_key = os.getenv("GEMINI_API_KEY")
