@@ -110,6 +110,11 @@ def fetch_transcript(video_id: str) -> str:
         session = None
         if raw_cookie:
             session = requests.Session()
+            # Giả lập danh tính trình duyệt Chrome thật để đi kèm với Cookie
+            session.headers.update({
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+                "Accept-Language": "en-US,en;q=0.9,vi;q=0.8"
+            })
             for cookie_item in raw_cookie.split(";"):
                 cookie_item = cookie_item.strip()
                 if "=" in cookie_item:
