@@ -80,12 +80,10 @@ print(f"DEBUG - PayOS Module: {bool(PayOS)}")
 
 payos_client = None
 if PAYOS_CLIENT_ID and PAYOS_API_KEY and PAYOS_CHECKSUM_KEY and PayOS:
-    custom_http_client = httpx.Client(verify=False)
     payos_client = PayOS(
         client_id=PAYOS_CLIENT_ID, 
         api_key=PAYOS_API_KEY, 
-        checksum_key=PAYOS_CHECKSUM_KEY,
-        http_client=custom_http_client
+        checksum_key=PAYOS_CHECKSUM_KEY
     )
     print("DEBUG - PayOS Client Khởi tạo THÀNH CÔNG")
 else:
