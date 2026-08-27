@@ -104,8 +104,20 @@ def extract_video_id(url: str) -> str:
 def fetch_transcript(video_id: str) -> str:
     """Lấy phụ đề từ Youtube và nối lại thành đoạn văn"""
     try:
-        # Khởi tạo API
-        api = YouTubeTranscriptApi()
+        # Xử lý Cookie thủ công nếu có để vượt rào chặn IP
+        import os, requests
+        raw_cookie = os.getenv("YOUTUBE_RAW_COOKIE")
+        session = None
+        if raw_cookie:
+            session = requests.Session()
+            for cookie_item in raw_cookie.split(";"):
+                cookie_item = cookie_item.strip()
+                if "=" in cookie_item:
+                    key, val = cookie_item.split("=", 1)
+                    session.cookies.set(key, val, domain=".youtube.com")
+                    
+        # Khởi tạo API (truyền session chứa cookie vào nếu có)
+        api = YouTubeTranscriptApi(http_client=session) if session else YouTubeTranscriptApi()
         # Lấy danh sách phụ đề có sẵn
         transcript_list = api.list(video_id)
         # Ưu tiên lấy tiếng Việt, dự phòng tiếng Anh
